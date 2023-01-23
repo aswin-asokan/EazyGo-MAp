@@ -15,9 +15,7 @@ class _MapState extends State<Map> {
     return Scaffold(
       body: FlutterMap(
         options: MapOptions(
-          center: LatLng(9.9816, 76.2999),
-          zoom: 12,
-        ),
+            center: LatLng(9.9816, 76.2999), zoom: 12, maxZoom: 18.4),
         nonRotatedChildren: [
           AttributionWidget.defaultWidget(
             source: 'OpenStreetMap contributors',
