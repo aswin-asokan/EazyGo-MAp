@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 
 class Map extends StatefulWidget {
   const Map({super.key});

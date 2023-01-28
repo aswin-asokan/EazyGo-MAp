@@ -1,6 +1,6 @@
-import 'package:eazygo_map/feeds.dart';
-import 'package:eazygo_map/user.dart';
-import 'package:eazygo_map/map.dart';
+import 'package:eazygo_map/Feeds/feeds.dart';
+import 'package:eazygo_map/User/user.dart';
+import 'package:eazygo_map/Map/map.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatefulWidget {
