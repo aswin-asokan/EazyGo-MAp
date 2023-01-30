@@ -18,7 +18,7 @@ class _NavBarState extends State<NavBar> {
     return Scaffold(
       body: screens[currentindex],
       bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Color.fromRGBO(232, 234, 233, 1),
+          backgroundColor: Color.fromRGBO(217, 233, 230, 1),
           selectedItemColor: Color.fromRGBO(28, 103, 88, 1),
           unselectedItemColor: Colors.black,
           type: BottomNavigationBarType.fixed,
