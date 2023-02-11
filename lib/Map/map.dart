@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 
 class Map extends StatefulWidget {
   const Map({super.key});
@@ -14,7 +13,7 @@ class Map extends StatefulWidget {
 class _MapState extends State<Map> {
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(9.999546, 76.307841),
-    zoom: 14.4746,
+    zoom: 16,
   );
 
   late GoogleMapController mapController;
@@ -29,7 +28,7 @@ class _MapState extends State<Map> {
     currentposition = position;
     LatLng latlngposition = LatLng(position.latitude, position.longitude);
     CameraPosition cameraPosition =
-        new CameraPosition(target: latlngposition, zoom: 14);
+        new CameraPosition(target: latlngposition, zoom: 16);
     mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
