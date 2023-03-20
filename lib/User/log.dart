@@ -17,6 +17,10 @@ class login_1 extends StatefulWidget {
 class _login_1State extends State<login_1> {
   @override
   Widget build(BuildContext context) {
+/*<<<<<<< HEAD
+=======
+    final Size screenSize = MediaQuery.of(context).size;
+>>>>>>> master*/
     return Scaffold(
       backgroundColor: Colors.white,
       body: Align(
@@ -52,7 +56,11 @@ class _login_1State extends State<login_1> {
               Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 child: Container(
+//<<<<<<< HEAD
                   width: 390,
+/*=======
+                  width: screenSize.width,
+>>>>>>> master*/
                   height: 56,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),

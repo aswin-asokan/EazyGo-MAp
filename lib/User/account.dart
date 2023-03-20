@@ -222,7 +222,11 @@ class _login_3State extends State<login_3> {
         )),
       ),
       bottomSheet: Container(
+//<<<<<<< HEAD
         height: 100,
+/*=======
+        height: 160,
+>>>>>>> master*/
         child: Align(
           alignment: Alignment.center,
           child: Column(
