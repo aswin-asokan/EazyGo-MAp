@@ -1,4 +1,3 @@
-import 'package:eazygo_map/Feeds/feeds.dart';
 import 'package:eazygo_map/User/user.dart';
 import 'package:eazygo_map/Map/map.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   int currentindex = 0;
-  final screens = [Feed(), Map(), User()];
+  final screens = [Map(), User()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,13 +25,9 @@ class _NavBarState extends State<NavBar> {
           onTap: (index) => setState(() => currentindex = index),
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.feed_sharp), label: 'feeds'),
-            BottomNavigationBarItem(
               icon: Icon(Icons.location_on_sharp),
               label: 'map',
             ),
-            /*BottomNavigationBarItem(
-                icon: Icon(Icons.search_sharp), label: 'search'),*/
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'user'),
           ]),
     );

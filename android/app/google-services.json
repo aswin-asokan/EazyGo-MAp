@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "47107805262",
+    "project_id": "eazygo-map",
+    "storage_bucket": "eazygo-map.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:47107805262:android:aea19a6794aaa72697f31f",
+        "android_client_info": {
+          "package_name": "com.example.eazygo_map"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "47107805262-9gblicbb4qbu26014lt6fhitsdaoe5ed.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.eazygo_map",
+            "certificate_hash": "97a6be3b007b5020ea243072af76028c7898e674"
+          }
+        },
+        {
+          "client_id": "47107805262-vmjv623hr7e7f2c2a090kedn2rs60ft4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh6reLUdE7OE-FkGxquLdRJMxqguDJaVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "47107805262-vmjv623hr7e7f2c2a090kedn2rs60ft4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
