@@ -106,6 +106,84 @@ class _login_2State extends State<login_2> {
                 height: 40,
               ),
               Padding(
+//<<<<<<< HEAD
+                padding: const EdgeInsets.only(left: 30, right: 30),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Smaller TextField
+                        SizedBox(
+                          width: 30,
+                          child: TextField(
+                            decoration: InputDecoration(
+                                prefixIcon:
+                                    Icon(Icons.alternate_email_rounded)),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Expanded(
+                          child: TextField(
+                            cursorColor: Color.fromRGBO(28, 103, 88, 1),
+                            style: GoogleFonts.urbanist(
+                                fontWeight: FontWeight.w500),
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xff1c6758))),
+                              hintStyle: GoogleFonts.urbanist(fontSize: 17),
+                              hintText: 'Email Id',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        // Smaller TextField
+                        SizedBox(
+                          width: 30,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.lock_outline_rounded),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          child: TextField(
+                            cursorColor: Color.fromRGBO(28, 103, 88, 1),
+                            obscureText: _isHidden,
+                            style: GoogleFonts.urbanist(
+                                fontWeight: FontWeight.w500),
+                            decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xff1c6758))),
+                                hintText: 'Password',
+                                suffixIcon: IconButton(
+                                    hoverColor: Color(0xff1c6758),
+                                    focusColor: Color(0xff1c6758),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isHidden = !_isHidden;
+                                      });
+                                    },
+                                    icon: Icon(_isHidden == true
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined))),
+                          ),
+                        ),
+                      ],
+/*=======
                 padding: EdgeInsets.only(left: 30, right: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -133,10 +211,13 @@ class _login_2State extends State<login_2> {
                           hintText: 'Email Id',
                         ),
                       ),
+>>>>>>> master*/
                     ),
                   ],
                 ),
               ),
+/*<<<<<<< HEAD
+=======
               const SizedBox(
                 height: 20,
               ),
@@ -186,6 +267,7 @@ class _login_2State extends State<login_2> {
                   ),
                 ],
               ),
+>>>>>>> master*/
             ],
           ),
         ),

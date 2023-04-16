@@ -1,8 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:eazygo_map/User/login_page.dart';
 import 'package:eazygo_map/navbar.dart';
 import 'package:flutter/material.dart';
-
-import 'package:eazygo_map/User/loging.dart';
 
 void main(List<String> args) {
   runApp(MyApp());
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
       splashTransition: SplashTransition.fadeTransition,
       splashIconSize: double.maxFinite,
       centered: true,
-      nextScreen: Loging(),
+      nextScreen: login_page(),
       duration: 2000,
     ));
   }
