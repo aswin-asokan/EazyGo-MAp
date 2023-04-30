@@ -273,7 +273,11 @@ class _login_emailState extends State<login_email> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
-                            FirebaseAuth.instance
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: ((context) => const NavBar())));
+                            /*FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                                     email: _email.text, password: _pass.text)
                                 .then((value) async {
@@ -295,6 +299,7 @@ class _login_emailState extends State<login_email> {
                             }).onError((error, stackTrace) {
                               print("Error:${error.toString()}");
                             });
+                          */
                           },
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all(
