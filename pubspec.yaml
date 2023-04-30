@@ -43,6 +43,14 @@ dependencies:
   flutter_launcher_icons: ^0.11.0
   flutter_otp_text_field: ^1.1.1
   dropdown_button2: ^2.0.1
+  firebase_auth: ^4.4.2
+  firebase_core: ^2.10.0
+  custom_info_window: ^1.0.1
+  cloud_firestore: ^4.5.3
+  provider: ^6.0.5
+  location: ^4.4.0
+  flutter_map: ^3.1.0
+  latlong: ^0.6.1
   
 
 dev_dependencies:
@@ -77,6 +85,7 @@ flutter:
     - images/image 10.png
     - images/Frame.png
     - images/Group 129.png
+    - images/pipe (2).png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

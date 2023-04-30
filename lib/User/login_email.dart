@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eazygo_map/User/login_phone.dart';
+import 'package:eazygo_map/auth_prov.dart';
 import 'package:eazygo_map/navbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'create_acc.dart';
 
 class login_email extends StatefulWidget {
@@ -13,7 +17,15 @@ class login_email extends StatefulWidget {
 
 class _login_emailState extends State<login_email> {
   var isHidden = true;
+  TextEditingController _email = TextEditingController();
+  TextEditingController _pass = TextEditingController();
   @override
+  void dispose() {
+    _email.dispose();
+    _pass.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final height = MediaQuery.of(context).size.height;
@@ -31,6 +43,7 @@ class _login_emailState extends State<login_email> {
       size1 = height * 0.02;
       size2 = height * 0.06;
     }
+    final authProvider = context.watch<AuthProvider>();
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -160,6 +173,7 @@ class _login_emailState extends State<login_email> {
                           ),
                           Expanded(
                             child: TextField(
+                              controller: _email,
                               cursorColor: Color.fromRGBO(28, 103, 88, 1),
                               style: GoogleFonts.urbanist(
                                   fontWeight: FontWeight.w500),
@@ -208,6 +222,7 @@ class _login_emailState extends State<login_email> {
                           ),
                           Expanded(
                             child: TextField(
+                              controller: _pass,
                               obscureText: isHidden,
                               cursorColor: Color.fromRGBO(28, 103, 88, 1),
                               style: GoogleFonts.urbanist(
@@ -258,10 +273,28 @@ class _login_emailState extends State<login_email> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                (MaterialPageRoute(
-                                    builder: (context) => NavBar())));
+                            FirebaseAuth.instance
+                                .signInWithEmailAndPassword(
+                                    email: _email.text, password: _pass.text)
+                                .then((value) async {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) => const NavBar())));
+                              QuerySnapshot querySnapshot =
+                                  await FirebaseFirestore.instance
+                                      .collection('USERS')
+                                      .where('E-mail Address',
+                                          isEqualTo: _email)
+                                      .get();
+                              if (querySnapshot.docs.isNotEmpty) {
+                                // await prefs.setString('email', email);
+                              } else {
+                                print('No document found with email:');
+                              }
+                            }).onError((error, stackTrace) {
+                              print("Error:${error.toString()}");
+                            });
                           },
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all(
