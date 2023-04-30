@@ -31,7 +31,7 @@ class _login_emailState extends State<login_email> {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-      final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final font, size1, size2;
     if (width < 350) {
       font = width * 0.04;
@@ -248,22 +248,28 @@ class _login_emailState extends State<login_email> {
                               ),
                             ),
                           ),
-                          
-                        
                         ],
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 58),
-                    child: Align(alignment: Alignment.centerLeft,
-                      child: TextButton(onPressed: (){
-                                 Navigator.push(
-                                    context,
-                                    (MaterialPageRoute(
-                                        builder: (context) =>
-                                            const password())));
-                              }, child: Text("Forgot Password?",style: GoogleFonts.urbanist(fontSize: font,color: Color.fromRGBO(28, 103, 88, 1)),),),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              (MaterialPageRoute(
+                                  builder: (context) => const password())));
+                        },
+                        child: Text(
+                          "Forgot Password?",
+                          style: GoogleFonts.urbanist(
+                              fontSize: font,
+                              color: Color.fromRGBO(28, 103, 88, 1)),
+                        ),
+                      ),
                     ),
                   )
                 ],
@@ -297,19 +303,6 @@ class _login_emailState extends State<login_email> {
                                   context,
                                   MaterialPageRoute(
                                       builder: ((context) => const NavBar())));
-                              QuerySnapshot querySnapshot =
-                                  await FirebaseFirestore.instance
-                                      .collection('USERS')
-                                      .where('E-mail Address',
-                                          isEqualTo: _email)
-                                      .get();
-                              if (querySnapshot.docs.isNotEmpty) {
-                                // await prefs.setString('email', email);
-                              } else {
-                                print('No document found with email:');
-                              }
-                            }).onError((error, stackTrace) {
-                              print("Error:${error.toString()}");
                             });
                           },
                           style: ButtonStyle(
