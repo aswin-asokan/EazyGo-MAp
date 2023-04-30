@@ -12,7 +12,7 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   int currentindex = 0;
-  final screens = [Feed(), Map(), User()];
+  final screens = [Feed(), Map(), User_Profile()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

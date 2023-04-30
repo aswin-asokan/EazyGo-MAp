@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,14 +17,17 @@ class Map extends StatefulWidget {
 class _MapState extends State<Map> {
   List<Marker> myMarker = [];
   List<Marker> markers = [];
+  @override
+  void initState() {
+    super.initState();
+    _getMarkersFromFirestore();
+  }
 
   @override
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(9.999546, 76.307841),
     zoom: 16,
   );
-
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   late GoogleMapController mapController;
 
@@ -32,9 +38,9 @@ class _MapState extends State<Map> {
   specified
   here*/
   BitmapDescriptor icon =
-      BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+      BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
   BitmapDescriptor iconH =
-      BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+      BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
   BitmapDescriptor iconM =
       BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
   BitmapDescriptor iconL =
@@ -43,7 +49,6 @@ class _MapState extends State<Map> {
       BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
   BitmapDescriptor iconO =
       BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
-      
 
   /*current
   location
@@ -58,22 +63,46 @@ class _MapState extends State<Map> {
         new CameraPosition(target: latlngposition, zoom: 16);
     mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
+
   /*firestore
   connection*/
+  void showBottomSheet() {}
+  String? icons;
+  Future<void> _addMarkerToFirestore() async {
+    await FirebaseFirestore.instance.collection('markers').add({
+      'position': GeoPoint(currentposition.latitude, currentposition.longitude),
+      'title': '$_chosenValue1',
+      'snippet': '$_chosenValue2',
+    });
+    setState(() {});
+  }
+
+  void _getMarkersFromFirestore() {
+    FirebaseFirestore.instance
+        .collection('markers')
+        .snapshots()
+        .listen((querySnapshot) {
+      markers.clear();
+      for (var doc in querySnapshot.docs) {
+        GeoPoint position = doc['position'];
+        String title = doc['title'];
+        String snippet = doc['snippet'];
+        Marker marker = Marker(
+          markerId: MarkerId(doc.id),
+          position: LatLng(position.latitude, position.longitude),
+          infoWindow: InfoWindow(title: title, snippet: snippet),
+        );
+        markers.add(marker);
+      }
+      setState(() {});
+    });
+  }
 
   bool isVisible = false;
   String? _chosenValue1 = 'Road Issues';
   String? _chosenValue2 = 'High Risk';
   String? cVal1, cVal2, Des;
   int? i;
-
-  Future<void> addMarker(double lat, double lng, String title) async {
-    await _firestore.collection('markers').add({
-      'latitude': lat,
-      'longitude': lng,
-      'title': title,
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +116,9 @@ class _MapState extends State<Map> {
     var font3 = width * 0.046;
     TextEditingController issue_tf = TextEditingController();
     String issue = '';
-    _handleTap(LatLng tappedPoint) {
-      void _addMarker() {
+
+    void handleTap() {
+      /*void _addMarker() {
         setState(() {
           issue = issue_tf.text;
           var newMarker = myMarker.add(Marker(
@@ -142,14 +172,13 @@ class _MapState extends State<Map> {
               },
             ),
             markerId: MarkerId('${myMarker.length}'),
-            position: tappedPoint,
+            position:
+                LatLng(currentposition.latitude, currentposition.longitude),
             draggable: true,
             icon: icon,
           ));
         });
-        addMarker(
-            tappedPoint.latitude, tappedPoint.longitude, issue.toString());
-      }
+      }*/
 
       void _changeVal() {
         setState(() {
@@ -212,7 +241,8 @@ class _MapState extends State<Map> {
                                   fontWeight: FontWeight.w500,
                                   fontSize: font2)),
                           onPressed: () {
-                            _addMarker();
+                            //_addMarker();
+                            _addMarkerToFirestore();
                             Navigator.of(context).pop();
                             _changeVal();
                           },
@@ -289,7 +319,7 @@ class _MapState extends State<Map> {
                           Align(
                               alignment: Alignment.centerLeft,
                               child: Text('Select Severity:')),
-                        if (_chosenValue1 == 'Road Issues' && !isKeyboard)
+                        if (_chosenValue1 == 'Road Issues')
                           Row(
                             children: [
                               Icon(Icons.warning_amber_outlined),
@@ -366,26 +396,242 @@ class _MapState extends State<Map> {
           zoomControlsEnabled: false,
           mapType: MapType.hybrid,
           initialCameraPosition: _kGooglePlex,
-          markers: Set.from(myMarker),
-          onTap: _handleTap,
+          markers: Set.of(markers),
         ),
       ]),
-      floatingActionButton: CircleAvatar(
-        radius: 30,
-        backgroundColor: Color.fromRGBO(217, 233, 230, 1),
-        child: IconButton(
-          onPressed: locatePosition,
-          icon: Icon(
-            Icons.location_on,
+      /*location
+      report issue
+      button
+      here*/
+      floatingActionButton: Container(
+        width: width * 0.35,
+        height: height * 0.07,
+        child: Padding(
+          padding: EdgeInsets.only(left: 7, right: 7),
+          child: Row(
+            children: [
+              IconButton(
+                  onPressed: () async {
+                    locatePosition();
+                  },
+                  icon: Icon(Icons.location_on_rounded),
+                  color: Color.fromRGBO(28, 103, 88, 1)),
+              SizedBox(
+                width: width * 0.035,
+              ),
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        bool testBool = true;
+                        return StatefulBuilder(
+                          builder: (context, setState) {
+                            return AlertDialog(
+                              title: Text('Make Report',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.urbanist(
+                                      color: Color(0xff1c6758),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: font1)),
+                              backgroundColor: Color.fromRGBO(217, 233, 230, 1),
+                              actions: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancel',
+                                          style: GoogleFonts.urbanist(
+                                              color: Color(0xff1c6758),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: font2)),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    TextButton(
+                                      child: Text('OK',
+                                          style: GoogleFonts.urbanist(
+                                              color: Color(0xff1c6758),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: font2)),
+                                      onPressed: () {
+                                        //_addMarker();
+                                        _addMarkerToFirestore();
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                              content: Container(
+                                height: h,
+                                child: Column(
+                                  children: [
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text('Select Issue:',
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: font3,
+                                            ))),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.info_outline_rounded),
+                                        SizedBox(
+                                          width: width * 0.03,
+                                        ),
+                                        Container(
+                                          width: width * 0.53,
+                                          child: DropdownButton(
+                                            style: GoogleFonts.urbanist(
+                                                fontSize: font3,
+                                                color: Colors.black),
+                                            dropdownColor: Color.fromRGBO(
+                                                217, 233, 230, 1),
+                                            value: _chosenValue1,
+                                            items: <String>[
+                                              'Road Issues',
+                                              'Pipe Leakage',
+                                              'Other Issues',
+                                            ].map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _chosenValue1 = value;
+                                                if (_chosenValue1 ==
+                                                    'Road Issues') {
+                                                  icon = iconH;
+                                                  h = height * 0.35;
+                                                } else if (_chosenValue1 ==
+                                                    'Pipe Leakage') {
+                                                  icon = iconP;
+                                                  _chosenValue2 = '';
+                                                  h = height * 0.25;
+                                                } else if (_chosenValue1 ==
+                                                    'Other Issues') {
+                                                  icon = iconO;
+                                                  _chosenValue2 = '';
+                                                  h = height * 0.25;
+                                                } else {
+                                                  icon = iconH;
+                                                }
+                                              });
+                                            },
+                                            icon: Icon(null),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    if (!isKeyboard)
+                                      SizedBox(
+                                        height: width * 0.03,
+                                      ),
+                                    if (_chosenValue1 == 'Road Issues')
+                                      Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text('Select Severity:')),
+                                    if (_chosenValue1 == 'Road Issues')
+                                      Row(
+                                        children: [
+                                          Icon(Icons.warning_amber_outlined),
+                                          SizedBox(
+                                            width: width * 0.03,
+                                          ),
+                                          Container(
+                                            width: width * 0.53,
+                                            child: DropdownButton(
+                                              style: GoogleFonts.urbanist(
+                                                  fontSize: font3,
+                                                  color: Colors.black),
+                                              icon: Icon(null),
+                                              dropdownColor: Color.fromRGBO(
+                                                  217, 233, 230, 1),
+                                              value: _chosenValue2,
+                                              items: <String>[
+                                                'High Risk',
+                                                'Medium Risk',
+                                                'Low Risk',
+                                              ].map<DropdownMenuItem<String>>(
+                                                  (String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _chosenValue2 = value;
+                                                  if (_chosenValue1 ==
+                                                      'Road Issues') {
+                                                    if (_chosenValue2 ==
+                                                        'High Risk') {
+                                                      icon = iconH;
+                                                    } else if (_chosenValue2 ==
+                                                        'Medium Risk') {
+                                                      icon = iconM;
+                                                    } else {
+                                                      icon = iconL;
+                                                    }
+                                                  }
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    if (_chosenValue1 == 'Road Issues')
+                                      SizedBox(
+                                        height: width * 0.03,
+                                      ),
+                                    TextField(
+                                      cursorColor: Color(0xff1c6758),
+                                      controller: issue_tf,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: 3,
+                                      decoration: InputDecoration(
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color(0xff1c6758))),
+                                          border: OutlineInputBorder(),
+                                          hintText:
+                                              'Enter description on the issue'),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      });
+                  setState(() {
+                    _chosenValue1 = 'Road Issues';
+                    _chosenValue2 = 'High Risk';
+                    icon = iconH;
+                  });
+                },
+                icon: Icon(Icons.report_problem_rounded),
+                color: Color.fromRGBO(28, 103, 88, 1),
+              )
+            ],
           ),
-          color: Color.fromRGBO(28, 103, 88, 1),
         ),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(40)),
+            color: Color.fromRGBO(217, 233, 230, 1)),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 
-  void onMapCreated(controller) {
+  void onMapCreated(controller) async {
     setState(() {
       mapController = controller;
       locatePosition();
