@@ -1,3 +1,4 @@
+import 'package:eazygo_map/Profile/profilePage.dart';
 import 'package:eazygo_map/User/login_email.dart';
 import 'package:eazygo_map/User/user.dart';
 import 'package:eazygo_map/Map/map.dart';
@@ -5,6 +6,8 @@ import 'package:eazygo_map/auth_prov.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+
+
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
@@ -15,7 +18,7 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   int currentindex = 0;
-  final screens = [Map(), User_Profile()];
+  final screens = [Map(), profilePage()];
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
