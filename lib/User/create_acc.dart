@@ -1,6 +1,10 @@
 import 'package:eazygo_map/User/create_profile.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'variables.dart';
 
 class create_acc extends StatefulWidget {
   const create_acc({super.key});
@@ -10,10 +14,22 @@ class create_acc extends StatefulWidget {
 }
 
 class _create_accState extends State<create_acc> {
+  final TextEditingController mail =TextEditingController();
+  final TextEditingController pass1 =TextEditingController();
+  final TextEditingController pass2=TextEditingController();
+   
+  var errormessage="";
+  bool _isvisible = false;
+  
+
   @override
   var isHidden1 = true;
   var isHidden2 = true;
   Widget build(BuildContext context) {
+    void dispose() {
+      mail.dispose();
+      super.dispose();
+    }
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -64,6 +80,8 @@ class _create_accState extends State<create_acc> {
               SizedBox(
                 height: height * 0.01,
               ),
+              
+                  
             /*image
               starts
               from
@@ -159,7 +177,12 @@ class _create_accState extends State<create_acc> {
                             width: 8,
                           ),
                           Expanded(
-                            child: TextField(
+                            child: TextFormField(controller: mail,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (mail) =>
+                              mail != null && !EmailValidator.validate(mail)
+                                  ? 'Enter a valid email'
+                                  : null,
                               cursorColor: Color.fromRGBO(28, 103, 88, 1),
                               style: GoogleFonts.urbanist(
                                   fontWeight: FontWeight.w500),
@@ -208,6 +231,7 @@ class _create_accState extends State<create_acc> {
                           ),
                           Expanded(
                             child: TextField(
+                              controller: pass1,
                               obscureText: isHidden1,
                               cursorColor: Color.fromRGBO(28, 103, 88, 1),
                               style: GoogleFonts.urbanist(
@@ -267,6 +291,7 @@ class _create_accState extends State<create_acc> {
                           ),
                           Expanded(
                             child: TextField(
+                              controller: pass2,
                               obscureText: isHidden2,
                               cursorColor: Color.fromRGBO(28, 103, 88, 1),
                               style: GoogleFonts.urbanist(
@@ -294,6 +319,16 @@ class _create_accState extends State<create_acc> {
                       ),
                     ),
                   ),
+                  if (!isKeyboard)
+                 SizedBox(
+                            height: height * 0.005,
+                          ),
+                    Visibility(
+                    visible: _isvisible,
+                    child: Text(
+                      '$errormessage',
+                      style: TextStyle(color: Color.fromARGB(255, 218, 8, 8)),
+                    ),),
                 ],
               ),
             ),
@@ -317,11 +352,66 @@ class _create_accState extends State<create_acc> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
+                              String s;
+                              if(pass1.text == null || mail.text.isEmpty){
+                                 if(pass1.text != pass2.text){
+                                 s = mail.text;
+                                print("string:");
+                              setState(() {
+                                _isvisible = true;
+                                
+                              });
+                            Future.delayed(const Duration(seconds: 2),
+                                  () {
+                                setState(() {
+                                  _isvisible = false;
+                                });
+                              });
+
+                              
+                              errormessage="Password Doesn't Match";
+                              
+                            }
+                                 
+                                 
+
+                            else {
+                              setState(() {
+                                _isvisible = true;
+                              });
+                            Future.delayed(const Duration(seconds: 2),
+                                  () {
+                                setState(() {
+                                  _isvisible = false;
+                                });
+                              });
+
+                              
+                              errormessage="Email Or Password is Empty";
+                              
+                                        }
+                          
+                              }
+                                      
+                         else if(pass1.text==pass2.text )
+                            {
+                              FirebaseAuth.instance.createUserWithEmailAndPassword(email: mail.text, password: pass2.text).then((value) {
+                              ScaffoldMessenger.of( context).showSnackBar(const SnackBar(content: Text("Registered successfully"),
+                              duration: Duration(seconds: 2),backgroundColor: Color(0xff1c6758),),);
+                              
+                            });
+                             Navigator.push(
                                 context,
                                 (MaterialPageRoute(
-                                    builder: (context) =>
-                                        const create_profile())));
+                                    builder: (context) => 
+                                        create_profile())));}
+                            
+                           
+                                        setState(() {
+                                          mail.clear();
+                                          pass1.clear();
+                                          pass2.clear();
+                                        });
                           },
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all(

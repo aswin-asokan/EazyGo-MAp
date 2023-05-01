@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'create_acc.dart';
+import 'package:eazygo_map/User/create_profile.dart';
+
+
 
 class login_email extends StatefulWidget {
   const login_email({super.key});
@@ -20,6 +23,7 @@ class _login_emailState extends State<login_email> {
   var isHidden = true;
   TextEditingController _email = TextEditingController();
   TextEditingController _pass = TextEditingController();
+  
   @override
   void dispose() {
     _email.dispose();
@@ -299,6 +303,11 @@ class _login_emailState extends State<login_email> {
                                 .signInWithEmailAndPassword(
                                     email: _email.text, password: _pass.text)
                                 .then((value) async {
+                                 /* final FirebaseAuth auth = FirebaseAuth.instance;
+                            final User? user = auth.currentUser;
+                            userId = user!.uid;
+                            String email = _email.text;*/
+
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

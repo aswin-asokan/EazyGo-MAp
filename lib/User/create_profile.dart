@@ -1,20 +1,32 @@
+import 'package:eazygo_map/User/variables.dart';
+import 'package:eazygo_map/navbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class create_profile extends StatefulWidget {
   const create_profile({super.key});
-
   @override
   State<create_profile> createState() => _create_profileState();
 }
 
 class _create_profileState extends State<create_profile> {
   @override
+  
+
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final CollectionReference _users =
+      FirebaseFirestore.instance.collection('USERS');
+
+  TextEditingController fullname = TextEditingController();
+  TextEditingController location = TextEditingController();
+  bool loding = false;
     final font, size1, size2, rad, l, t;
+    var userId,docId;
     if (width < 350) {
       font = width * 0.04;
       rad = width * 0.25;
@@ -119,6 +131,7 @@ class _create_profileState extends State<create_profile> {
                               ),
                               Expanded(
                                 child: TextField(
+                                  
                                   cursorColor: Color.fromRGBO(28, 103, 88, 1),
                                   style: GoogleFonts.urbanist(
                                       fontWeight: FontWeight.w500),
@@ -168,6 +181,7 @@ class _create_profileState extends State<create_profile> {
                               ),
                               Expanded(
                                 child: TextField(
+                                  controller: fullname,
                                   cursorColor: Color.fromRGBO(28, 103, 88, 1),
                                   style: GoogleFonts.urbanist(
                                       fontWeight: FontWeight.w500),
@@ -218,6 +232,7 @@ class _create_profileState extends State<create_profile> {
                               ),
                               Expanded(
                                 child: TextField(
+                                  controller: location,
                                   cursorColor: Color.fromRGBO(28, 103, 88, 1),
                                   style: GoogleFonts.urbanist(
                                       fontWeight: FontWeight.w500),
@@ -257,7 +272,27 @@ class _create_profileState extends State<create_profile> {
                               height: height * 0.06,
                               width: double.infinity,
                               child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: ()async {
+                                    final String name = fullname.text;
+                                    final String loc=location.text;
+                                   
+                                    final user = FirebaseAuth.instance.currentUser;
+                                    print("email:"+'$e_mail');
+                                    if (name != null && loc!= null){
+                                      
+                                      await _users.add({'mail':'$e_mail',"Name": name,"Location": loc});
+                                    
+
+                                    }
+                                      Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => const NavBar())));
+
+                        
+                      
+                                   
+                                  },
                                   style: ButtonStyle(
                                       shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(
