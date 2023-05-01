@@ -52,6 +52,7 @@ dependencies:
   flutter_map: ^3.1.0
   latlong: ^0.6.1
   email_validator: ^2.1.17
+  uuid: ^3.0.7
 
   
 
@@ -75,13 +76,7 @@ flutter_icons:
 # The following section is specific to Flutter packages.
 flutter:
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
-  uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
-assets:
+  assets:
     - images/logo.png
     - images/image 6.png
     - images/image 10.png
@@ -89,6 +84,13 @@ assets:
     - images/Group 129.png
     - images/pipe (2).png
   #   - images/a_dot_ham.jpeg
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
