@@ -95,7 +95,8 @@ class _MapState extends State<Map> {
       'position': GeoPoint(currentposition.latitude, currentposition.longitude),
       'title': '$_chosenValue1',
       'description': description,
-      'color': color
+      'color': color,
+      'visible': true
     });
     setState(() {});
   }
@@ -113,9 +114,11 @@ class _MapState extends State<Map> {
         String id = doc['id'];
         String color = doc['color'];
         double hue = double.parse(color);
+        bool vis = doc['visible'];
         Marker marker = Marker(
           markerId: MarkerId(doc.id),
           position: LatLng(position.latitude, position.longitude),
+          visible: vis,
           icon: BitmapDescriptor.defaultMarkerWithHue(hue),
           infoWindow: InfoWindow(
             title: title,

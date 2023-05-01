@@ -1,8 +1,11 @@
 import 'package:eazygo_map/User/create_acc.dart';
 import 'package:eazygo_map/User/login_email.dart';
 import 'package:eazygo_map/User/req_otp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../navbar.dart';
 
 class login_phone extends StatefulWidget {
   const login_phone({super.key});
@@ -12,6 +15,62 @@ class login_phone extends StatefulWidget {
 }
 
 class _login_phoneState extends State<login_phone> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+// Define a function that generates an OTP and starts the verification process
+  void generateOTP(String phoneNumber) async {
+    // Call verifyPhoneNumber() to start the OTP verification process
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (phoneAuthCredential) {
+        // Called when the verification is complete automatically (e.g. when testing on iOS)
+        _auth.signInWithCredential(phoneAuthCredential);
+      },
+      verificationFailed: (error) {
+        // Called when the verification fails (e.g. if the phone number is invalid)
+        print(error.toString());
+      },
+      codeSent: (verificationId, resendToken) {
+        // Called when the OTP code is sent to the user's phone number
+        // Store the verification ID and the resend token in a local variable
+        String smsCode = '';
+
+        // Display a dialog box to the user to enter the OTP code
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: Text('Enter Verification Code'),
+            content: TextField(
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                smsCode = value;
+              },
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text('Done'),
+                onPressed: () async {
+                  // Call signInWithCredential() to sign in with the OTP code
+                  AuthCredential credential = PhoneAuthProvider.credential(
+                      verificationId: verificationId, smsCode: smsCode);
+                  await _auth.signInWithCredential(credential);
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => const NavBar())));
+                },
+              )
+            ],
+          ),
+        );
+      },
+      codeAutoRetrievalTimeout: (verificationId) {},
+      timeout: Duration(seconds: 60),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
@@ -30,6 +89,7 @@ class _login_phoneState extends State<login_phone> {
       size = height * 0.03;
       size2 = height * 0.06;
     }
+    TextEditingController _phone = TextEditingController();
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.white,
@@ -157,6 +217,7 @@ class _login_phoneState extends State<login_phone> {
                     ),
                     Expanded(
                       child: TextField(
+                        controller: _phone,
                         cursorColor: Color.fromRGBO(28, 103, 88, 1),
                         style:
                             GoogleFonts.urbanist(fontWeight: FontWeight.w500),
@@ -193,10 +254,8 @@ class _login_phoneState extends State<login_phone> {
                     width: double.infinity,
                     child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              (MaterialPageRoute(
-                                  builder: (context) => req_otp())));
+                          String phn = _phone.text;
+                          generateOTP('+91' + phn);
                         },
                         style: ButtonStyle(
                             shape: MaterialStateProperty.all(
