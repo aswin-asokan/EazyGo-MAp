@@ -1,10 +1,15 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eazygo_map/User/create_acc.dart';
+import 'package:eazygo_map/User/create_accPhn.dart';
 import 'package:eazygo_map/User/login_email.dart';
 import 'package:eazygo_map/Map/map.dart';
 import 'package:eazygo_map/variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class login_phone extends StatefulWidget {
   const login_phone({super.key});
@@ -14,10 +19,30 @@ class login_phone extends StatefulWidget {
 }
 
 class _login_phoneState extends State<login_phone> {
+  @override
+  void initState() {
+    super.initState();
+    checkLoggedIn();
+  }
+
+  bool _isLoggedIn = false;
 // Create an instance of the FirebaseAuth class
   FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<void> checkLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    phVal = prefs.getString('phoneNumber');
+    ver = prefs.getString('verificationId');
+
+    if (phVal != null && ver != null) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: ((context) => const Map())));
+      setState(() {});
+    }
+  }
 
   void generateOTP(String phoneNumber) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phoneNumber', phoneNumber);
     // Call verifyPhoneNumber() to start the OTP verification process
     await _auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
@@ -92,6 +117,9 @@ class _login_phoneState extends State<login_phone> {
             ],
           ),
         );
+        SharedPreferences prefs =
+            SharedPreferences.getInstance() as SharedPreferences;
+        prefs.setString('verificationId', verificationId);
       },
       codeAutoRetrievalTimeout: (verificationId) {},
       timeout: Duration(seconds: 60),
@@ -283,8 +311,32 @@ class _login_phoneState extends State<login_phone> {
                     width: double.infinity,
                     child: ElevatedButton(
                         onPressed: () async {
-                          provider = phoneNum.text;
-                          generateOTP('+91' + phoneNum.text);
+                          ph = phoneNum.text;
+                          QuerySnapshot querySnapshot = await FirebaseFirestore
+                              .instance
+                              .collection('USERS')
+                              .where('provider', isEqualTo: ph)
+                              .get();
+                          if (querySnapshot.docs.isNotEmpty) {
+                            for (var doc in querySnapshot.docs) {
+                              prov = doc['provider'];
+                              provider = prov;
+                              userName = doc['Name'];
+                              img = doc['image'];
+                              location = doc['Location'];
+                            }
+                          }
+                          if (ph == prov) {
+                            generateOTP('+91' + phoneNum.text);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Phone number not registered'),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Color(0xff1c6758),
+                            ));
+                          }
+
+                          //
                         },
                         style: ButtonStyle(
                             shape: MaterialStateProperty.all(
@@ -321,7 +373,8 @@ class _login_phoneState extends State<login_phone> {
                             Navigator.push(
                                 context,
                                 (MaterialPageRoute(
-                                    builder: (context) => const create_acc())));
+                                    builder: (context) =>
+                                        const create_accPhn())));
                           },
                           child: Text(
                             'Create an account',

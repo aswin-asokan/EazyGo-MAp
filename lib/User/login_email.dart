@@ -56,6 +56,31 @@ class _login_emailState extends State<login_email> {
       location = prefs.getString('location')!;
     });
     if (email != null && password != null) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                "Loading......",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              content: Container(
+                width: 80.0,
+                height: 80.0,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 2.0,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            );
+          });
       FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
@@ -66,12 +91,6 @@ class _login_emailState extends State<login_email> {
 
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: ((context) => const Map())));
-      }).onError((error, stackTrace) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Email or Password Error'),
-          duration: Duration(seconds: 2),
-          backgroundColor: Color(0xff1c6758),
-        ));
       });
     }
   }
@@ -111,7 +130,7 @@ class _login_emailState extends State<login_email> {
           provider = doc['provider'];
           await prefs.setString('location', location!);
           await prefs.setString('userName', userName!);
-          await prefs.setString('img', img!);
+          await prefs.setString('img', img);
           await prefs.setString('provider', provider!);
         }
 
@@ -224,7 +243,7 @@ class _login_emailState extends State<login_email> {
                       width: width * 0.4,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pop(
+                          Navigator.push(
                               context,
                               (MaterialPageRoute(
                                   builder: (context) => login_phone())));

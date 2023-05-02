@@ -122,14 +122,14 @@ class _profileState extends State<profile> with SingleTickerProviderStateMixin {
     return File(imagePath).copy(image.path);
   }
 
-  void initState() {
-    super.initState();
-    setState(() {
-      _image = imagePermanent != null
-          ? imagePermanent
-          : File("images/noProfile.png");
-    });
-  }
+  // void initState() {
+  //   super.initState();
+  //   setState(() {
+  //     _image = imagePermanent != null
+  //         ? imagePermanent
+  //         : File("images/noProfile.png");
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -143,17 +143,12 @@ class _profileState extends State<profile> with SingleTickerProviderStateMixin {
             child: ClipOval(
               child: SizedBox.fromSize(
                 size: const Size.fromRadius(60), // Image radius
-                child: _image != null
-                    ? Image.file(
-                        _image!,
-                        fit: BoxFit.cover,
-                      )
-                    : Image.asset(
-                        "images/noProfile.png",
-                        fit: BoxFit.fill,
-                        width: 10,
-                        height: 10,
-                      ),
+                child: Image.asset(
+                  img,
+                  fit: BoxFit.fill,
+                  width: 10,
+                  height: 10,
+                ),
               ),
             ),
           ),
@@ -629,6 +624,67 @@ Widget textField({
       ));
 }
 
+Widget textField1({
+  required var svgPath,
+  required var hintText,
+  required var controller,
+}) {
+  return Container(
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Expanded(
+              flex: 1,
+              child: Container(
+                height: 40,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      svgPath,
+                      color: Color(0xff595959),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 1,
+                      color: Color(0xff595959),
+                    )
+                  ],
+                ),
+              )),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+              flex: 9,
+              child: TextField(
+                textAlign: TextAlign.start,
+                controller: controller,
+                decoration: InputDecoration(
+                  enabled: false,
+                  contentPadding: EdgeInsets.only(top: 10),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: mainColor),
+                  ),
+                  hintStyle: TextStyle(
+                    color: Colors.grey,
+                  ),
+                  hintText: hintText,
+                  focusColor: mainColor,
+                ),
+                cursorColor: mainColor,
+              ))
+        ],
+      ));
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class MyButton extends StatefulWidget {
@@ -755,7 +811,7 @@ class _ProfilePicState extends State<ProfilePic> {
               child: SizedBox.fromSize(
                 size: Size.fromRadius(50), // Image radius
                 child: Image.asset(
-                  img!,
+                  img,
                   fit: BoxFit.fill,
                   width: 10,
                   height: 10,
@@ -785,7 +841,53 @@ Widget UserName({
       )));
 }
 
-Widget profileButton({
+Widget profileButton1({
+  var title,
+  var icon,
+  var context,
+  var page,
+}) {
+  return Column(
+    children: [
+      SizedBox(
+        height: 2,
+      ),
+      InkWell(
+        onTap: (() {
+          navigateTo(context, page);
+        }),
+        child: Container(
+          height: 30,
+          decoration: BoxDecoration(
+              color: Color(0xffF0FEFB),
+              border: Border.all(width: 1.5, color: Color(0xff1C6758)),
+              borderRadius: BorderRadius.all(Radius.circular(5))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                title,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff1C6758)),
+              )
+            ],
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 2,
+      )
+    ],
+  );
+}
+
+Widget profileButton2({
   var title,
   var icon,
   var context,
@@ -801,6 +903,8 @@ Widget profileButton({
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.remove('email');
           await prefs.remove('password');
+          await prefs.remove('phoneNumber');
+          await prefs.remove('verificationId');
           await FirebaseAuth.instance.signOut();
           Navigator.pushReplacement(
               context, (MaterialPageRoute(builder: (context) => login_page())));
@@ -1018,7 +1122,7 @@ class _ReportCardState extends State<ReportCard> {
   var block = "images/road.png";
   var leak = "images/leaking.png";
   var other = "images/report.png";
-  var title = testcontoller.text;
+  var title = uname.text;
   var location = "perumbavoor";
   var Type = "others";
   @override
@@ -1149,7 +1253,7 @@ class CardWidget extends StatefulWidget {
 }
 
 class _CardWidgetState extends State<CardWidget> {
-  var text = testcontoller.text;
+  var text = uname.text;
   var id;
   bool boxcheck = false;
   // var checkbox =newlist.text;

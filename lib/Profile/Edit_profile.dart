@@ -6,8 +6,10 @@
 // import '../SourceScreen/Variables.dart';
 // import '../SourceScreen/widgets.dart';
 
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eazygo_map/Profile/profilePage.dart';
+import 'package:eazygo_map/variables.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +23,13 @@ class editProfile extends StatefulWidget {
   State<editProfile> createState() => _editProfileState();
 }
 
+final CollectionReference _users =
+    FirebaseFirestore.instance.collection('USERS');
+
 class _editProfileState extends State<editProfile> {
+  TextEditingController un = TextEditingController(text: userName);
+  TextEditingController p = TextEditingController(text: provider);
+  TextEditingController l = TextEditingController(text: location);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,43 +54,59 @@ class _editProfileState extends State<editProfile> {
             textField(
                 svgPath: "images/svg/UserIcon.svg",
                 hintText: "username",
-                controller: testcontoller),
+                controller: un),
             SizedBox(
               height: 10,
             ),
-            textField(
+            /*textField(
                 svgPath: "images/svg/F_icon.svg",
                 hintText: "Full name",
                 controller: testcon),
             SizedBox(
               height: 10,
-            ),
+            ),*/
             textField(
                 svgPath: "images/svg/L_name.svg",
                 hintText: "Location",
-                controller: testcon),
+                controller: l),
             SizedBox(
               height: 10,
             ),
+            /*
             textField(
                 svgPath: "images/svg/number.svg",
                 hintText: "Phone Number",
                 controller: testcon),
             SizedBox(
               height: 10,
-            ),
-            textField(
+            ),*/
+            textField1(
                 svgPath: "images/svg/emailicon.svg",
                 hintText: "Email ID",
-                controller: testcon),
+                controller: p),
 
             SizedBox(
               height: 60,
             ),
-            MyButton(Title: "submit", onPress: (() {
-
-                
-            }))
+            ElevatedButton(
+                onPressed: () async {
+                  String userB = un.text;
+                  String locater = l.text;
+                  if (userB.isNotEmpty && locater.isNotEmpty) {
+                    FirebaseFirestore.instance
+                        .collection('my_collection')
+                        .doc()
+                        .update({
+                          'Name': userB,
+                          'Location': locater,
+                        })
+                        .then((value) => Navigator.pop(context))
+                        .catchError((error) =>
+                            print('Failed to update document: $error'));
+                  }
+                },
+                child: Text("data")),
+            MyButton(Title: "submit", onPress: () async {})
           ],
         ),
       )),

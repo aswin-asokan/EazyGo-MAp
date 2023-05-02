@@ -77,7 +77,7 @@ class _create_profileState extends State<create_profile> {
                       ),*/
                       CircleAvatar(
                         child: Image.asset(
-                          img!,
+                          img,
                         ),
                         radius: rad,
                         backgroundColor: Color(0xffC3E5DF),

@@ -25,7 +25,7 @@ class YourReport extends StatefulWidget {
 class _YourReportState extends State<YourReport> {
   @override
   Widget build(BuildContext context) {
-     ReportProvider Reportpro=Provider.of<ReportProvider>(context);
+    ReportProvider Reportpro = Provider.of<ReportProvider>(context);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -34,82 +34,68 @@ class _YourReportState extends State<YourReport> {
             left: 5,
             right: 5,
           ),
-          child: Column(
-            children: [
-            Title_m(Title: "Your Reports",context: context,Page: profilePage()),
-          //  Expanded(
-          //    child: ListView.builder(
-          //             itemCount: Reportpro.report_list.length,
-          //             itemBuilder: ((context, index) => ReportCard())),
-          //  ),
+          child: Column(children: [
+            Title_m(
+                Title: "Your Reports", context: context, Page: profilePage()),
+            //  Expanded(
+            //    child: ListView.builder(
+            //             itemCount: Reportpro.report_list.length,
+            //             itemBuilder: ((context, index) => ReportCard())),
+            //  ),
 
-
-
-        Expanded(
-                flex: 9,
-                child: ListView.separated(
-                  itemCount: Reportpro.report_list.length,
-                  itemBuilder: (context, index) {
-                    var report = Reportpro.report_list[index];
-                    return Dismissible(
-                      key: UniqueKey(),
-                      background: Container(
-                        color: Colors.red.withOpacity(.5),
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
+            Expanded(
+              flex: 9,
+              child: ListView.separated(
+                itemCount: Reportpro.report_list.length,
+                itemBuilder: (context, index) {
+                  var report = Reportpro.report_list[index];
+                  return Dismissible(
+                    key: UniqueKey(),
+                    background: Container(
+                      color: Colors.red.withOpacity(.5),
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
                       ),
-                      onDismissed: (direction) {
-                        setState(() {
-                          Reportpro.removeItem(index);
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    ),
+                    onDismissed: (direction) {
+                      setState(() {
+                        Reportpro.removeItem(index);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text('Report removed from list'),
                         action: SnackBarAction(
-                        label: 'Undo',
-                        onPressed: () {
-                        setState(() {
-                        Reportpro.addTodo();
-                        });
+                          label: 'Undo',
+                          onPressed: () {
+                            setState(() {
+                              Reportpro.addTodo();
+                            });
+                          },
+                        ),
+                      ));
+                    },
+                    child: ReportCard(),
+                  );
                 },
+                separatorBuilder: (context, index) => SizedBox(height: 15),
               ),
-            ));
-
-
-
-            
-                      },
-                      child: ReportCard(),
-                    );
-                    
-                  },
-                   separatorBuilder: (context, index) => SizedBox(
-                              height: 15),
-                ),
-              ),
-        Expanded(
-          flex: 1,
-          child: TextField(
-          controller: testcontoller,
-        ))
-           
-          ]
-          ),
+            ),
+            Expanded(
+                flex: 1,
+                child: TextField(
+                  controller: uname,
+                ))
+          ]),
         ),
-        
       ),
-
-       floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-                    Reportpro.addTodo();
-                   // testT="hell";
-                  
-
-                    }); // call the function to add a new widget
+            Reportpro.addTodo();
+            // testT="hell";
+          }); // call the function to add a new widget
         },
         child: Icon(Icons.add),
       ),

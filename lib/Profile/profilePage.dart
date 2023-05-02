@@ -17,8 +17,6 @@ class profilePage extends StatefulWidget {
   State<profilePage> createState() => _profilePageState();
 }
 
-String? mailID, imgID, nameID, locID;
-
 class _profilePageState extends State<profilePage> {
   @override
   Widget build(BuildContext context) {
@@ -37,7 +35,7 @@ class _profilePageState extends State<profilePage> {
               arrow_visible: false,
             ),
             Container(height: 180, width: 180, child: ProfilePic()),
-            UserName(usernmae: '@$uName'),
+            UserName(usernmae: '@$userName'),
             SizedBox(
               height: 15,
             ),
@@ -45,7 +43,7 @@ class _profilePageState extends State<profilePage> {
             SizedBox(
               height: 15,
             ),
-            profileButton(
+            profileButton1(
                 title: "Edit Profile",
                 icon: Icons.edit,
                 context: context,
@@ -53,7 +51,7 @@ class _profilePageState extends State<profilePage> {
             SizedBox(
               height: 5,
             ),
-            profileButton(
+            profileButton2(
               title: "Log out",
               icon: Icons.logout,
               context: context,
@@ -83,7 +81,6 @@ class _profilePageState extends State<profilePage> {
                 context: context,
                 page: contactPage(),
                 line_visible: false),
-            Text("$provider,$img,$userName,$location")
           ],
         ),
       )),

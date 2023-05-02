@@ -20,7 +20,7 @@ class _create_profileState extends State<create_profilPhone> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final CollectionReference _users =
-        FirebaseFirestore.instance.collection('USERSs');
+        FirebaseFirestore.instance.collection('USERS');
 
     TextEditingController fullname = TextEditingController();
     TextEditingController location = TextEditingController();

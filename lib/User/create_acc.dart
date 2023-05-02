@@ -398,6 +398,21 @@ class _create_accState extends State<create_acc> {
                                     backgroundColor: Color(0xff1c6758),
                                   ),
                                 );
+                              }).onError((error, stackTrace) {
+                                print("Error SignUp:${error.toString()}");
+                                if (error is FirebaseAuthException) {
+                                  if (error.code == 'email-already-in-use') {
+                                    // Email is already in use by another account
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text('Email is already Registered'),
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Color(0xff1c6758),
+                                      ),
+                                    );
+                                  }
+                                }
                               });
                               Navigator.push(
                                   context,

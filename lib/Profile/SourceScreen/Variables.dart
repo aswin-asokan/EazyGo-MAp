@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
+import '../../User/login_page.dart';
 import '../../variables.dart';
 
 Color mainColor = Color(0xff1C6758);
@@ -17,9 +20,9 @@ Future<void> PopTo(BuildContext context, var Page) async {
   //   MaterialPageRoute(builder: (context) => Page), (route) => false);
 }
 
-TextEditingController testcon = TextEditingController();
-
-TextEditingController testcontoller = TextEditingController(text: userName);
+TextEditingController locate = TextEditingController();
+TextEditingController provide = TextEditingController();
+TextEditingController uname = TextEditingController();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
