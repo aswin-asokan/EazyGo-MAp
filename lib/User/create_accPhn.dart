@@ -1,20 +1,22 @@
+import 'package:eazygo_map/Profile/ContactUs.dart';
 import 'package:eazygo_map/User/create_acc.dart';
-import 'package:eazygo_map/User/login_email.dart';
-import 'package:eazygo_map/Map/map.dart';
+import 'package:eazygo_map/User/create_profile.dart';
+import 'package:eazygo_map/User/create_profilePhone.dart';
 import 'package:eazygo_map/variables.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class login_phone extends StatefulWidget {
-  const login_phone({super.key});
+class create_accPhn extends StatefulWidget {
+  const create_accPhn({super.key});
 
   @override
-  State<login_phone> createState() => _login_phoneState();
+  State<create_accPhn> createState() => _create_accState();
 }
 
-class _login_phoneState extends State<login_phone> {
-// Create an instance of the FirebaseAuth class
+class _create_accState extends State<create_accPhn> {
+  final TextEditingController phn = TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   void generateOTP(String phoneNumber) async {
@@ -84,8 +86,10 @@ class _login_phoneState extends State<login_phone> {
                         verificationId: verificationId, smsCode: smsCode);
                     await _auth.signInWithCredential(credential);
 
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: ((context) => const Map())));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => create_profilPhone())));
                   },
                 ),
               )
@@ -98,40 +102,48 @@ class _login_phoneState extends State<login_phone> {
     );
   }
 
+  var errormessage = "";
+  bool _isvisible = false;
+
   @override
+  var isHidden1 = true;
+  var isHidden2 = true;
   Widget build(BuildContext context) {
-    TextEditingController phoneNum = TextEditingController();
+    void dispose() {
+      phn.dispose();
+      super.dispose();
+    }
+
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final font, size, size2;
+    final font, size1, size2;
     if (width < 350) {
       font = width * 0.04;
     } else {
       font = height * 0.02;
     }
     if (!isKeyboard) {
-      size = height * 0.08;
+      size1 = height * 0.08;
       size2 = height * 0.1;
     } else {
-      size = height * 0.03;
+      size1 = height * 0.02;
       size2 = height * 0.06;
     }
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Align(
-        alignment: Alignment.center,
-        child: Column(
-          children: [
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Align(
+          alignment: Alignment.center,
+          child: Column(children: [
             SizedBox(
               height: size2,
             ),
             /*Text
-        starts
-        here*/
+          starts
+          here*/
             if (!isKeyboard)
-              Text('Login Account',
+              Text('Create Account',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.urbanist(
                       color: Color(0xff1c6758),
@@ -143,18 +155,20 @@ class _login_phoneState extends State<login_phone> {
               ),
             if (!isKeyboard)
               Text(
-                'Hello! Welcome back to your account',
+                'Hello! Lets create on Account',
                 style: GoogleFonts.urbanist(
                     color: Color.fromARGB(255, 8, 8, 8),
                     fontSize: height * 0.02),
               ),
             if (!isKeyboard)
               SizedBox(
-                height: height * 0.1,
+                height: height * 0.05,
               ),
-            /*Nav button
-        starts
-        here*/
+
+            /*nav button
+              starts
+              from
+              here*/
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: Container(
@@ -174,7 +188,7 @@ class _login_phoneState extends State<login_phone> {
                           Navigator.pop(
                               context,
                               (MaterialPageRoute(
-                                  builder: (context) => login_email())));
+                                  builder: (context) => create_acc())));
                         },
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -211,132 +225,111 @@ class _login_phoneState extends State<login_phone> {
                 ),
               ),
             ),
-            /*Text field
+            SizedBox(
+              height: height * 0.02,
+            ),
+            /*Text field 1
         starts
         here*/
-
-            SizedBox(
-              height: size,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Smaller TextField
-                    SizedBox(
-                      width: 30,
-                      child: TextFormField(
-                        initialValue: '+91',
-                        style: GoogleFonts.urbanist(
-                            color: Color.fromRGBO(155, 155, 155, 1),
-                            fontWeight: FontWeight.w500),
-                        decoration: InputDecoration(
-                          enabled: false,
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xff1c6758))),
-                        ),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
+                  /*text field 2
+                  starts
+                  here*/
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, right: 30),
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Smaller TextField
+                          SizedBox(
+                            width: 30,
+                            child: TextFormField(
+                              initialValue: '+91',
+                              style: GoogleFonts.urbanist(
+                                  color: Color.fromRGBO(155, 155, 155, 1),
+                                  fontWeight: FontWeight.w500),
+                              decoration: InputDecoration(
+                                enabled: false,
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xff1c6758))),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Expanded(
+                            child: TextField(
+                              maxLength: 10,
+                              controller: phn,
+                              cursorColor: Color.fromRGBO(28, 103, 88, 1),
+                              style: GoogleFonts.urbanist(
+                                  fontWeight: FontWeight.w500),
+                              decoration: InputDecoration(
+                                counterText: '',
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xff1c6758))),
+                                hintStyle: GoogleFonts.urbanist(fontSize: font),
+                                hintText: 'Phone Number',
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
-                      child: TextField(
-                        maxLength: 10,
-                        controller: phoneNum,
-                        cursorColor: Color.fromRGBO(28, 103, 88, 1),
-                        style:
-                            GoogleFonts.urbanist(fontWeight: FontWeight.w500),
-                        decoration: InputDecoration(
-                          counterText: '',
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xff1c6758))),
-                          hintStyle: GoogleFonts.urbanist(fontSize: font),
-                          hintText: 'Phone Number',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ]),
         ),
-      ),
-      /*bottom sheet
+        /*bottom sheet
         starts
         here*/
-      bottomSheet: Container(
-          color: Colors.white,
-          height: height * 0.25,
-          width: double.infinity,
-          child: Padding(
-            padding: EdgeInsets.only(top: 40),
+        bottomSheet: Container(
+            color: Colors.white,
+            height: height * 0.2,
+            width: double.infinity,
             child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Container(
-                    child: Column(children: [
-                  Container(
-                    height: height * 0.06,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          provider = phoneNum.text;
-                          generateOTP('+91' + phoneNum.text);
-                        },
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10))),
-                            backgroundColor: const MaterialStatePropertyAll(
-                                Color(0xff1c6758))),
-                        child: Text(
-                          'Request OTP',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.urbanist(
-                              color: Colors.white,
-                              fontSize: height * 0.02,
-                              fontWeight: FontWeight.w600),
-                        )),
-                  ),
-                  SizedBox(
-                    height: height * 0.04,
-                  ),
-                  Container(
-                    height: height * 0.05,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Not Registered Yet?',
-                          style: GoogleFonts.urbanist(
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromARGB(255, 120, 118, 118),
-                              fontSize: font),
-                        ),
-                        TextButton(
+              padding: EdgeInsets.only(top: 40),
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                      child: Column(children: [
+                    Container(
+                      height: height * 0.06,
+                      width: double.infinity,
+                      child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                (MaterialPageRoute(
-                                    builder: (context) => const create_acc())));
+                            provider = phn.text;
+                            generateOTP('+91' + phn.text);
                           },
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              backgroundColor: const MaterialStatePropertyAll(
+                                  Color(0xff1c6758))),
                           child: Text(
-                            'Create an account',
+                            'Next',
+                            textAlign: TextAlign.center,
                             style: GoogleFonts.urbanist(
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xff1c6758),
-                                fontSize: font),
-                          ),
-                        ),
-                      ],
+                                color: Colors.white,
+                                fontSize: height * 0.02,
+                                fontWeight: FontWeight.w600),
+                          )),
                     ),
-                  )
-                ]))),
-          )),
-    ));
-    ;
+                  ]))),
+            )),
+      ),
+    );
   }
 }

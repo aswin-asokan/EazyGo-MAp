@@ -36,7 +36,7 @@ class _SettingaPageState extends State<SettingaPage> {
         padding: EdgeInsets.only(top: 30, left: 20, right: 20),
         child: Column(
           children: [
-            Title_m(Title: "Settings",context: context,Page: profilePage()),
+            Title_m(Title: "Settings", context: context, Page: profilePage()),
             SizedBox(
               height: 30,
             ),
@@ -63,14 +63,14 @@ class _SettingaPageState extends State<SettingaPage> {
             SizedBox(
               height: 10,
             ),
-            card(
+            /*card(
                 title: "Default Location",
                 svgPath: "images/svg/DefaultIcon.svg",
                 context: context,
                 page: DefaultLocation()),
             SizedBox(
               height: 10,
-            ),
+            ),*/
             card(
                 title: "Terms and Conditions",
                 svgPath: "images/svg/T&CIcon.svg",

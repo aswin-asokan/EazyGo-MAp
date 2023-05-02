@@ -57,6 +57,8 @@ dependencies:
   image_picker: ^0.8.7+4
   path_provider: ^2.0.14
   url_launcher: ^6.1.10
+  shared_preferences: ^2.1.0
+  fluttertoast: ^8.2.1
 
   
 
@@ -89,6 +91,8 @@ flutter:
     - images/pipe (2).png
     - images/
     - images/svg/
+    - images/kindpng_1636340.png
+    - images/pngegg.png
   #   - images/a_dot_ham.jpeg
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

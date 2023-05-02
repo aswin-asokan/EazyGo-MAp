@@ -10,19 +10,21 @@
 // import 'package:path_provider/path_provider.dart';
 // import 'package:path/path.dart';
 
-
-
 import 'dart:io';
 
+import 'package:eazygo_map/User/login_page.dart';
+import 'package:eazygo_map/variables.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Variables.dart';
-
 
 class rotation extends StatefulWidget {
   const rotation({super.key});
@@ -105,7 +107,7 @@ class _profileState extends State<profile> with SingleTickerProviderStateMixin {
     if (image == null) return;
 
     //final imageTemporary = File(image.path);
-     imagePermanent = await saveFilePermenently(image.path);
+    imagePermanent = await saveFilePermenently(image.path);
 
     setState(() {
       //this._image = imageTemporary;
@@ -119,12 +121,16 @@ class _profileState extends State<profile> with SingleTickerProviderStateMixin {
     final image = File('${directory.path}/$name');
     return File(imagePath).copy(image.path);
   }
+
   void initState() {
     super.initState();
     setState(() {
-      _image = imagePermanent!=null?imagePermanent:File("images/noProfile.png");
+      _image = imagePermanent != null
+          ? imagePermanent
+          : File("images/noProfile.png");
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -157,10 +163,10 @@ class _profileState extends State<profile> with SingleTickerProviderStateMixin {
           Positioned(
               top: 105,
               left: 105,
-              child:icon_p(
-                      context: context,
-                      editCam: getImage_camera,
-                      editGal: getImage_gallery)),
+              child: icon_p(
+                  context: context,
+                  editCam: getImage_camera,
+                  editGal: getImage_gallery)),
         ],
       ),
     );
@@ -168,7 +174,6 @@ class _profileState extends State<profile> with SingleTickerProviderStateMixin {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 Widget icon_p({
   required var context,
@@ -386,8 +391,7 @@ Widget card(
     bool line_visible = true,
     required var svgPath,
     var page,
-    var context
-    }) {
+    var context}) {
   return InkWell(
     splashColor: Colors.grey[100],
     onTap: () {
@@ -527,45 +531,40 @@ Widget card(
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 Widget Title_m({
   required var Title,
-  bool arrow_visible=true,
+  bool arrow_visible = true,
   var Page,
   var context,
-}){
+}) {
   return Container(
     width: double.infinity,
     child: Stack(
       children: [
-        Align(
+        /*Align(
           alignment: Alignment.centerLeft,
           child: Visibility(
             visible: arrow_visible,
-            child: IconButton(onPressed: (() {
-              PopTo(context, Page);
-            }), icon: Icon(Icons.arrow_back_ios_new)),
+            child: IconButton(
+                onPressed: (() {
+                  PopTo(context, Page);
+                }),
+                icon: Icon(Icons.arrow_back_ios_new)),
           ),
-        ),
+        ),*/
         Align(
-          //alignment: Alignment.bottomCenter,
-          child: Text(Title,style: TextStyle(color: Color(0xff1C6758),fontSize: 30,fontWeight: FontWeight.bold),))
+            //alignment: Alignment.bottomCenter,
+            child: Text(
+          Title,
+          style: TextStyle(
+              color: Color(0xff1C6758),
+              fontSize: 30,
+              fontWeight: FontWeight.w500),
+        ))
       ],
     ),
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -732,22 +731,18 @@ class _MyButtonState extends State<MyButton> {
 //   }
 // }
 
-
 class ProfilePic extends StatefulWidget {
   const ProfilePic({super.key});
 
   @override
   State<ProfilePic> createState() => _ProfilePicState();
-  
 }
 
 class _ProfilePicState extends State<ProfilePic> {
-  late File? _image;
-  
   @override
   Widget build(BuildContext context) {
     setState(() {
-      _image = imagePermanent!=null? imagePermanent: image_d;
+      // _image = imagePermanent != null ? imagePermanent : image_d;
     });
     return Container(
       margin: const EdgeInsets.all(20),
@@ -757,23 +752,16 @@ class _ProfilePicState extends State<ProfilePic> {
         children: [
           Center(
             child: ClipOval(
-                  child: SizedBox.fromSize(
-                  size:  Size.fromRadius(50), // Image radius
-                  child: _image != null
-                    ? Image.file(
-                        _image!,
-                        fit: BoxFit.cover,
-                      )
-                    : Image.asset(
-                        "images/noProfile.png",
-                        fit: BoxFit.fill,
-                        width: 10,
-                        height: 10,
-                      ),
-    
-                        ),           
-                        ),
-
+              child: SizedBox.fromSize(
+                size: Size.fromRadius(50), // Image radius
+                child: Image.asset(
+                  img!,
+                  fit: BoxFit.fill,
+                  width: 10,
+                  height: 10,
+                ),
+              ),
+            ),
           ),
           const Center(
             child: rotation(),
@@ -784,37 +772,6 @@ class _ProfilePicState extends State<ProfilePic> {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Widget UserName({
   required var usernmae,
 }) {
@@ -824,7 +781,7 @@ Widget UserName({
           child: Text(
         usernmae,
         style: TextStyle(
-            fontSize: 25, fontWeight: FontWeight.bold, color: mainColor),
+            fontSize: 25, fontWeight: FontWeight.w400, color: mainColor),
       )));
 }
 
@@ -840,8 +797,13 @@ Widget profileButton({
         height: 2,
       ),
       InkWell(
-        onTap: (() {
-          navigateTo(context, page);
+        onTap: (() async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.remove('email');
+          await prefs.remove('password');
+          await FirebaseAuth.instance.signOut();
+          Navigator.pushReplacement(
+              context, (MaterialPageRoute(builder: (context) => login_page())));
         }),
         child: Container(
           height: 30,
@@ -892,7 +854,7 @@ Widget countProfile() {
               Text(
                 '$feedsCount+',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: 30,
                     color: mainColor),
               ),
@@ -909,7 +871,7 @@ Widget countProfile() {
               Text(
                 '$reportCount+',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: 30,
                     color: mainColor),
               ),
@@ -922,84 +884,88 @@ Widget countProfile() {
   );
 }
 
-
-
-
-
-Widget reportCard ({
+Widget reportCard({
   var title,
   var icon,
   var desc,
   var loc,
   var type,
   VoidCallback? delete,
-  
-})
-{
-  var block ="images/road.png";
-  var leak ="images/leaking.png";
-  var other="images/report.png";
-  var location="perumbavoor";
-  var Type="block";
+}) {
+  var block = "images/road.png";
+  var leak = "images/leaking.png";
+  var other = "images/report.png";
+  var location = "perumbavoor";
+  var Type = "block";
   return Container(
     //color: Colors.amber,
     width: double.infinity,
     height: 100,
-    margin: EdgeInsets.only(left: 15,right: 15),
+    margin: EdgeInsets.only(left: 15, right: 15),
     child: Stack(
       alignment: Alignment.centerLeft,
       children: [
         Positioned(
           right: 0.0,
           child: Container(
-            height: 100,
-            width: 280,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(9),
-              boxShadow:const [BoxShadow(
-            color: Color.fromARGB(255, 185, 185, 185),
-            blurRadius: 10.0,
-            spreadRadius: 1,
-            offset: Offset(2,2)
-          ),]
-            ),
-
-            child: Container(
-             // color: Colors.white.withOpacity(1),
-              margin: EdgeInsets.only(left: 30, top: 15,bottom: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,style: TextStyle(
-                    fontSize: 20
-                  ),),
-                  Text("24 April 2023",style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.grey[500],
-                  ),),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    color:mainColor,
-                    height: 1,
-                  ),
-                  SizedBox(height: 5,),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(Icons.location_pin,color: Colors.grey[600], size: 15,),
-                      Text(location,style: TextStyle(
-                    fontSize: 13,
-                    color: Color.fromARGB(255, 31, 12, 12)
-                  ),),
-                    ],
-                  )
-                ],
-              ),
-            )
-          ),
+              height: 100,
+              width: 280,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(9),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Color.fromARGB(255, 185, 185, 185),
+                        blurRadius: 10.0,
+                        spreadRadius: 1,
+                        offset: Offset(2, 2)),
+                  ]),
+              child: Container(
+                // color: Colors.white.withOpacity(1),
+                margin: EdgeInsets.only(left: 30, top: 15, bottom: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      "24 April 2023",
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      color: mainColor,
+                      height: 1,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.location_pin,
+                          color: Colors.grey[600],
+                          size: 15,
+                        ),
+                        Text(
+                          location,
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Color.fromARGB(255, 31, 12, 12)),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )),
         ),
         Positioned(
           top: 8,
@@ -1008,33 +974,38 @@ Widget reportCard ({
             height: 80,
             width: 60,
             decoration: BoxDecoration(
-              color: Type=="block"?Colors.redAccent:Type=="leak"?Colors.blueAccent:Type=="others"?Colors.greenAccent:Colors.black26,
-              borderRadius: BorderRadius.circular(9),
-               boxShadow:const [BoxShadow(
-            color: Color.fromARGB(255, 185, 185, 185),
-            blurRadius: 10.0,
-            spreadRadius: 1,
-            offset: Offset(2,2)
-          ),]
-            ),
+                color: Type == "block"
+                    ? Colors.redAccent
+                    : Type == "leak"
+                        ? Colors.blueAccent
+                        : Type == "others"
+                            ? Colors.greenAccent
+                            : Colors.black26,
+                borderRadius: BorderRadius.circular(9),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Color.fromARGB(255, 185, 185, 185),
+                      blurRadius: 10.0,
+                      spreadRadius: 1,
+                      offset: Offset(2, 2)),
+                ]),
             child: Container(
               height: 10,
               width: 10,
-              child: Type=="block"?Image.asset(block):Type=="leak"?Image.asset(leak):Type=="others"?Image.asset(other):Image.asset(leak),
-              ),
+              child: Type == "block"
+                  ? Image.asset(block)
+                  : Type == "leak"
+                      ? Image.asset(leak)
+                      : Type == "others"
+                          ? Image.asset(other)
+                          : Image.asset(leak),
+            ),
           ),
         ),
       ],
     ),
   );
 }
-
-
-
-
-
-
-
 
 class ReportCard extends StatefulWidget {
   const ReportCard({super.key});
@@ -1044,119 +1015,131 @@ class ReportCard extends StatefulWidget {
 }
 
 class _ReportCardState extends State<ReportCard> {
-   var block ="images/road.png";
-    var leak ="images/leaking.png";
-    var other="images/report.png";
-    var title=testcontoller.text;
-    var location="perumbavoor";
-    var Type="others";
-    @override
+  var block = "images/road.png";
+  var leak = "images/leaking.png";
+  var other = "images/report.png";
+  var title = testcontoller.text;
+  var location = "perumbavoor";
+  var Type = "others";
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-   
     return Container(
-    //color: Colors.amber,
-    width: double.infinity,
-    height: 100,
-    margin: EdgeInsets.only(left: 15,right: 15),
-    child: Stack(
-      alignment: Alignment.centerLeft,
-      children: [
-        Positioned(
-          right: 0.0,
-          child: Container(
-            height: 100,
-            width: 280,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(9),
-              boxShadow:const [BoxShadow(
-            color: Color.fromARGB(255, 185, 185, 185),
-            blurRadius: 10.0,
-            spreadRadius: 1,
-            offset: Offset(2,2)
-          ),]
-            ),
-
+      //color: Colors.amber,
+      width: double.infinity,
+      height: 100,
+      margin: EdgeInsets.only(left: 15, right: 15),
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          Positioned(
+            right: 0.0,
             child: Container(
-             // color: Colors.white.withOpacity(1),
-              margin: EdgeInsets.only(left: 30, top: 15,bottom: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,style: TextStyle(
-                    fontSize: 20
-                  ),),
-                  Text("24 April 2023",style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.grey[500],
-                  ),),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    color:mainColor,
-                    height: 1,
-                  ),
-                  SizedBox(height: 5,),
-                  Row(
+                height: 100,
+                width: 280,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(9),
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Color.fromARGB(255, 185, 185, 185),
+                          blurRadius: 10.0,
+                          spreadRadius: 1,
+                          offset: Offset(2, 2)),
+                    ]),
+                child: Container(
+                  // color: Colors.white.withOpacity(1),
+                  margin: EdgeInsets.only(left: 30, top: 15, bottom: 10),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.location_pin,color: Colors.grey[600], size: 15,),
-                      Text(location,style: TextStyle(
-                    fontSize: 13,
-                    color: Color.fromARGB(255, 31, 12, 12)
-                  ),),
+                      Text(
+                        title,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        "24 April 2023",
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        color: mainColor,
+                        height: 1,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.location_pin,
+                            color: Colors.grey[600],
+                            size: 15,
+                          ),
+                          Text(
+                            location,
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: Color.fromARGB(255, 31, 12, 12)),
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              ),
-            )
+                  ),
+                )),
           ),
-        ),
-        Positioned(
-          top: 8,
-          child: Container(
-            padding: EdgeInsets.all(10),
-            height: 80,
-            width: 60,
-            decoration: BoxDecoration(
-              color: Type=="block"?Colors.redAccent:Type=="leak"?Colors.blueAccent:Type=="others"?Colors.greenAccent:Colors.black26,
-              borderRadius: BorderRadius.circular(9),
-               boxShadow:const [BoxShadow(
-            color: Color.fromARGB(255, 185, 185, 185),
-            blurRadius: 10.0,
-            spreadRadius: 1,
-            offset: Offset(2,2)
-          ),]
-            ),
+          Positioned(
+            top: 8,
             child: Container(
-              height: 10,
-              width: 10,
-              child: Type=="block"?Image.asset(block):Type=="leak"?Image.asset(leak):Type=="others"?Image.asset(other):Image.asset(leak),
+              padding: EdgeInsets.all(10),
+              height: 80,
+              width: 60,
+              decoration: BoxDecoration(
+                  color: Type == "block"
+                      ? Colors.redAccent
+                      : Type == "leak"
+                          ? Colors.blueAccent
+                          : Type == "others"
+                              ? Colors.greenAccent
+                              : Colors.black26,
+                  borderRadius: BorderRadius.circular(9),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Color.fromARGB(255, 185, 185, 185),
+                        blurRadius: 10.0,
+                        spreadRadius: 1,
+                        offset: Offset(2, 2)),
+                  ]),
+              child: Container(
+                height: 10,
+                width: 10,
+                child: Type == "block"
+                    ? Image.asset(block)
+                    : Type == "leak"
+                        ? Image.asset(leak)
+                        : Type == "others"
+                            ? Image.asset(other)
+                            : Image.asset(leak),
               ),
+            ),
           ),
-        ),
-      ],
-    ),
-  );;
+        ],
+      ),
+    );
+    ;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 class CardWidget extends StatefulWidget {
   CardWidget({super.key});
@@ -1166,9 +1149,9 @@ class CardWidget extends StatefulWidget {
 }
 
 class _CardWidgetState extends State<CardWidget> {
-  var text=testcontoller.text;
+  var text = testcontoller.text;
   var id;
-  bool boxcheck=false;
+  bool boxcheck = false;
   // var checkbox =newlist.text;
   @override
   Widget build(BuildContext context) {
@@ -1178,56 +1161,68 @@ class _CardWidgetState extends State<CardWidget> {
         color: Color.fromARGB(255, 232, 232, 232),
         shadowColor: Colors.black,
         elevation: 2,
-        child: 
-        Center(
+        child: Center(
           child: Row(
             children: [
               Expanded(
-                child: Checkbox(value: boxcheck, onChanged: (value){
-                  setState(() {
-                    boxcheck=!boxcheck;
-                  });
-                }),
+                child: Checkbox(
+                    value: boxcheck,
+                    onChanged: (value) {
+                      setState(() {
+                        boxcheck = !boxcheck;
+                      });
+                    }),
               ),
-            
-          
-          Expanded(
-            flex: 5,
-            child: Text(text,
-            style: TextStyle(decoration: boxcheck?TextDecoration.lineThrough:null),),
+              Expanded(
+                flex: 5,
+                child: Text(
+                  text,
+                  style: TextStyle(
+                      decoration: boxcheck ? TextDecoration.lineThrough : null),
+                ),
+              ),
+              Container(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.blue),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.edit),
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.red),
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            // todo.remove(CardWidget());
+                          });
+                        },
+                        icon: Icon(Icons.delete),
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-          Container(
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
-                  color: Colors.blue),
-                  child: IconButton(onPressed:() {
-                    
-                  },icon:Icon(Icons.edit),color: Colors.white,),
-                ),
-                SizedBox(width: 10,),
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
-                  color: Colors.red),
-                  child: IconButton(onPressed:(){
-                    setState(() {
-                      
-                      
-                    // todo.remove(CardWidget());
-                    });
-                  }, icon:Icon(Icons.delete) ,color: Colors.white,),
-                ),
-                SizedBox(width: 10,),
-              ],
-            ),
-          )
-          ],
-      ),
         ),
       ),
     );

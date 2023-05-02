@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eazygo_map/User/login_phone.dart';
 import 'package:eazygo_map/User/passwordreset.dart';
 import 'package:eazygo_map/auth_prov.dart';
-import 'package:eazygo_map/navbar.dart';
+import 'package:eazygo_map/Map/map.dart';
+import 'package:eazygo_map/variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'create_acc.dart';
+import 'package:eazygo_map/User/create_profile.dart';
 
 class login_email extends StatefulWidget {
   const login_email({super.key});
@@ -20,11 +23,112 @@ class _login_emailState extends State<login_email> {
   var isHidden = true;
   TextEditingController _email = TextEditingController();
   TextEditingController _pass = TextEditingController();
+
   @override
   void dispose() {
     _email.dispose();
     _pass.dispose();
     super.dispose();
+  }
+
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('email');
+    String? password = prefs.getString('password');
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    setState(() {
+      _isLoggedIn = isLoggedIn;
+      provider = prefs.getString('provider')!;
+
+      userName = prefs.getString('userName')!;
+
+      img = prefs.getString('img')!;
+
+      location = prefs.getString('location')!;
+    });
+    if (email != null && password != null) {
+      FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) async {
+        /* final FirebaseAuth auth = FirebaseAuth.instance;
+                            final User? user = auth.currentUser;
+                            userId = user!.uid;
+                            String email = _email.text;*/
+
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: ((context) => const Map())));
+      }).onError((error, stackTrace) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Email or Password Error'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Color(0xff1c6758),
+        ));
+      });
+    }
+  }
+
+  void _login() async {
+    final email = _email.text;
+    provider = _email.text;
+    final password = _pass.text;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
+    await prefs.setString('password', password);
+    await prefs.setBool('isLoggedIn', true);
+
+    setState(() {
+      _isLoggedIn = true;
+    });
+    FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((value) async {
+      /* final FirebaseAuth auth = FirebaseAuth.instance;
+                            final User? user = auth.currentUser;
+                            userId = user!.uid;
+                            String email = _email.text;*/
+
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: ((context) => const Map())));
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('USERS')
+          .where('provider', isEqualTo: provider)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var doc in querySnapshot.docs) {
+          location = doc['Location'];
+          print('loc:' + location!);
+          userName = doc['Name'];
+          img = doc['image'];
+          provider = doc['provider'];
+          await prefs.setString('location', location!);
+          await prefs.setString('userName', userName!);
+          await prefs.setString('img', img!);
+          await prefs.setString('provider', provider!);
+        }
+
+        // String email = _emailAddress.text;
+        // SharedPreferences prefs =
+        //     await SharedPreferences.getInstance();
+        // await prefs.setString('email', email);
+      } else {
+        print('No document found with email: $provider');
+      }
+    }).onError((error, stackTrace) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Email or Password Error'),
+        duration: Duration(seconds: 2),
+        backgroundColor: Color(0xff1c6758),
+      ));
+    });
   }
 
   Widget build(BuildContext context) {
@@ -98,6 +202,26 @@ class _login_emailState extends State<login_email> {
                     SizedBox(
                       height: height * 0.06,
                       width: width * 0.4,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black),
+                        child: Text(
+                          'Email',
+                          style: GoogleFonts.urbanist(
+                              fontSize: font, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: width * 0.04,
+                    ),
+                    SizedBox(
+                      height: height * 0.06,
+                      width: width * 0.4,
                       child: TextButton(
                         onPressed: () {
                           Navigator.pop(
@@ -113,26 +237,6 @@ class _login_emailState extends State<login_email> {
                           'Phone Number',
                           style: GoogleFonts.urbanist(
                               fontSize: font, fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 0.04,
-                    ),
-                    SizedBox(
-                      height: height * 0.06,
-                      width: width * 0.4,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black),
-                        child: Text(
-                          'Email',
-                          style: GoogleFonts.urbanist(
-                              fontSize: font, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -294,16 +398,8 @@ class _login_emailState extends State<login_email> {
                       height: height * 0.06,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () {
-                            FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                                    email: _email.text, password: _pass.text)
-                                .then((value) async {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: ((context) => const NavBar())));
-                            });
+                          onPressed: () async {
+                            _login();
                           },
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all(

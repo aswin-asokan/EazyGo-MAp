@@ -2,48 +2,48 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
+import '../../variables.dart';
+
 Color mainColor = Color(0xff1C6758);
 Future<void> navigateTo(BuildContext context, var Page) async {
-  Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => Page),);
+  Navigator.of(context).push(
+    MaterialPageRoute(builder: (ctx) => Page),
+  );
 }
 
 Future<void> PopTo(BuildContext context, var Page) async {
-  //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => Page));
-  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Page), (route) => false);
+  Navigator.of(context).pop(MaterialPageRoute(builder: (ctx) => Page));
+  //Navigator.of(context).pushAndRemoveUntil(
+  //   MaterialPageRoute(builder: (context) => Page), (route) => false);
 }
-
-
 
 TextEditingController testcon = TextEditingController();
 
-TextEditingController testcontoller =TextEditingController(); 
+TextEditingController testcontoller = TextEditingController(text: userName);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 File? imagePermanent;
-File? image_d = File('images/noProfile.png');
+//File? image_d = File('images/noProfile.png');
 
 var feedsCount = 140;
 var reportCount = 100;
 
-var userName="nandhuuuuu";
-
+var uName = userName;
 
 class ReportProvider with ChangeNotifier {
-    List report_list=[];
-    addTodo(){
-      report_list.add(Widget);
-    }
+  List report_list = [];
+  addTodo() {
+    report_list.add(Widget);
+  }
 
-    void removeItem(int index) {
+  void removeItem(int index) {
     report_list.removeAt(index);
     notifyListeners();
   }
 }
 
-
-
-class Report{
+class Report {
   late String title;
   late String icon;
   late String desc;
@@ -52,21 +52,6 @@ class Report{
 
   Report({Title, icon, desc, loc, type});
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class MyListWidget extends StatefulWidget {
   final List<String> items;

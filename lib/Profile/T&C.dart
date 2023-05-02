@@ -46,7 +46,7 @@ class termsAndConditions extends StatelessWidget {
               child: Column(
                 children: [
                   Image.asset(
-                    "asset/Images/shield.png",
+                    "images/shield.png",
                     height: 36,
                     width: 36,
                   ),

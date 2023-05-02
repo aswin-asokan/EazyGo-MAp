@@ -1,6 +1,7 @@
+import 'package:eazygo_map/variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:eazygo_map/variables.dart';
 import 'ContactUs.dart';
 import 'Edit_profile.dart';
 import 'FeedsPage.dart';
@@ -15,6 +16,8 @@ class profilePage extends StatefulWidget {
   @override
   State<profilePage> createState() => _profilePageState();
 }
+
+String? mailID, imgID, nameID, locID;
 
 class _profilePageState extends State<profilePage> {
   @override
@@ -33,12 +36,12 @@ class _profilePageState extends State<profilePage> {
               Title: "Profile",
               arrow_visible: false,
             ),
-            Container(height: 180, width: 180, child:  ProfilePic()),
-            UserName(usernmae: '@$userName'),
+            Container(height: 180, width: 180, child: ProfilePic()),
+            UserName(usernmae: '@$uName'),
             SizedBox(
               height: 15,
             ),
-            countProfile(),
+            //countProfile(),
             SizedBox(
               height: 15,
             ),
@@ -58,12 +61,16 @@ class _profilePageState extends State<profilePage> {
             SizedBox(
               height: 20,
             ),
-            card(
+            /*card(
                 title: "Reports made by you",
                 svgPath: "images/svg/reportIcon.svg",
                 context: context,
                 page: YourReport()),
-            card(title: "Feeds Posted", svgPath: "asset/Images/FeedsIcon.svg",context: context, page: const feedsPage()),
+            card(
+                title: "Feeds Posted",
+                svgPath: "images/svg/FeedsIcon.svg",
+                context: context,
+                page: const feedsPage()),*/
             card(
                 title: "Settings",
                 svgPath: "images/svg/SettingsIcon.svg",
@@ -76,6 +83,7 @@ class _profilePageState extends State<profilePage> {
                 context: context,
                 page: contactPage(),
                 line_visible: false),
+            Text("$provider,$img,$userName,$location")
           ],
         ),
       )),

@@ -1,11 +1,14 @@
 import 'dart:ffi';
 
+import 'package:eazygo_map/Profile/profilePage.dart';
+import 'package:eazygo_map/variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class Map extends StatefulWidget {
@@ -320,6 +323,20 @@ class _MapState extends State<Map> {
     });
   }
 
+  void _getUsersFromFirestore() {
+    FirebaseFirestore.instance
+        .collection('USERS')
+        .snapshots()
+        .listen((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        location = doc['Location'];
+        userName = doc['Name'];
+        img = doc['image'];
+        provider = doc['provider'];
+      }
+    });
+  }
+
   double? icon;
   bool isVisible = false;
   String? _chosenValue1 = 'Poor Road Condition';
@@ -357,21 +374,30 @@ class _MapState extends State<Map> {
       button
       here*/
       floatingActionButton: Container(
-        width: width * 0.32,
+        width: width * 0.42,
         height: height * 0.07,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                  onPressed: () async {
-                    locatePosition();
-                  },
-                  icon: Icon(Icons.location_on_rounded),
-                  iconSize: width * 0.07,
-                  color: Color.fromRGBO(28, 103, 88, 1)),
-            ),
+            IconButton(
+                onPressed: () async {
+                  locatePosition();
+                },
+                icon: Icon(Icons.location_on_rounded),
+                iconSize: width * 0.07,
+                color: Color.fromRGBO(28, 103, 88, 1)),
+            IconButton(
+                onPressed: () {
+                  _getUsersFromFirestore();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => const profilePage())));
+                  print('image:' + img!);
+                },
+                icon: Icon(Icons.person_2_rounded),
+                iconSize: width * 0.07,
+                color: Color.fromRGBO(28, 103, 88, 1)),
             IconButton(
               iconSize: width * 0.07,
               onPressed: () {
@@ -514,7 +540,7 @@ class _MapState extends State<Map> {
             borderRadius: BorderRadius.all(Radius.circular(40)),
             color: Color.fromRGBO(217, 233, 230, 1)),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
