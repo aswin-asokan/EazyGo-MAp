@@ -905,6 +905,10 @@ Widget profileButton2({
           await prefs.remove('password');
           await prefs.remove('phoneNumber');
           await prefs.remove('verificationId');
+          await prefs.remove('location');
+          await prefs.remove('userName');
+          await prefs.remove('img');
+          await prefs.remove('provider');
           await FirebaseAuth.instance.signOut();
           Navigator.pushReplacement(
               context, (MaterialPageRoute(builder: (context) => login_page())));
