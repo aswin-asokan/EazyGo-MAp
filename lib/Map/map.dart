@@ -1,11 +1,15 @@
 import 'dart:ffi';
 
+import 'package:eazygo_map/Profile/profilePage.dart';
+import 'package:eazygo_map/variables.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class Map extends StatefulWidget {
@@ -323,6 +327,20 @@ class _MapState extends State<Map> {
     });
   }
 
+  void _getUsersFromFirestore() {
+    FirebaseFirestore.instance
+        .collection('USERS')
+        .snapshots()
+        .listen((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        location = doc['Location'];
+        userName = doc['Name'];
+        img = doc['image'];
+        provider = doc['provider'];
+      }
+    });
+  }
+
   double? icon;
   bool isVisible = false;
   String? _chosenValue1 = 'Poor Road Condition';
@@ -331,6 +349,14 @@ class _MapState extends State<Map> {
   int i = 0;
   var font1, font2, font3, font4;
   @override
+  DateTime? _currentBackPressTime;
+
+  Future<bool> _onWillPop() async {
+    SystemNavigator
+        .pop(); // close the app and destroy the current activity or window
+    return true;
+  }
+
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -342,97 +368,38 @@ class _MapState extends State<Map> {
     font3 = width * 0.039;
     font4 = width * 0.07;
 
-    return Scaffold(
-      body: Stack(children: [
-        GoogleMap(
-          onMapCreated: onMapCreated,
-          myLocationEnabled: true,
-          myLocationButtonEnabled: false,
-          padding: EdgeInsets.only(top: 250),
-          zoomControlsEnabled: false,
-          mapType: MapType.hybrid,
-          initialCameraPosition: _kGooglePlex,
-          markers: Set.of(markers),
-        ),
-      ]),
-      /*location
-      report issue
-      button
-      here*/
-      floatingActionButton: Container(
-        width: width * 0.32,
-        height: height * 0.07,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        body: Stack(children: [
+          GoogleMap(
+            onMapCreated: onMapCreated,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            padding: EdgeInsets.only(top: 250),
+            zoomControlsEnabled: false,
+            mapType: MapType.hybrid,
+            initialCameraPosition: _kGooglePlex,
+            markers: Set.of(markers),
+          ),
+        ]),
+        /*location
+        report issue
+        button
+        here*/
+        floatingActionButton: Container(
+          width: width * 0.42,
+          height: height * 0.07,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
                   onPressed: () async {
                     locatePosition();
                   },
                   icon: Icon(Icons.location_on_rounded),
                   iconSize: width * 0.07,
                   color: Color.fromRGBO(28, 103, 88, 1)),
-<<<<<<< Updated upstream
-            ),
-            IconButton(
-              iconSize: width * 0.07,
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      bool testBool = true;
-                      return StatefulBuilder(
-                        builder: (context, setState) {
-                          return AlertDialog(
-                            title: Text('Make Report',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.urbanist(
-                                    color: Color(0xff1c6758),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: font1)),
-                            backgroundColor: Color.fromRGBO(217, 233, 230, 1),
-                            actions: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Cancel',
-                                        style: GoogleFonts.urbanist(
-                                            color: Color(0xff1c6758),
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: font2)),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  TextButton(
-                                    child: Text('OK',
-                                        style: GoogleFonts.urbanist(
-                                            color: Color(0xff1c6758),
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: font2)),
-                                    onPressed: () {
-                                      //_addMarker();
-                                      _addMarkerToFirestore();
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
-                            content: Container(
-                              height: h,
-                              child: Column(
-                                children: [
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text('Select Issue:',
-=======
               IconButton(
                   onPressed: () {
                     _getUsersFromFirestore();
@@ -471,94 +438,124 @@ class _MapState extends State<Map> {
                                         Navigator.of(context).pop();
                                       },
                                       child: Text('Cancel',
->>>>>>> Stashed changes
                                           style: GoogleFonts.urbanist(
-                                            fontSize: font3,
-                                          ))),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.info_outline_rounded),
-                                      SizedBox(
-                                        width: width * 0.03,
-                                      ),
-                                      Container(
-                                        width: width * 0.53,
-                                        child: DropdownButton(
-                                          style: GoogleFonts.urbanist(
-                                              fontSize: font3,
-                                              color: Colors.black),
-                                          dropdownColor:
-                                              Color.fromRGBO(217, 233, 230, 1),
-                                          value: _chosenValue1,
-                                          items: <String>[
-                                            'Poor Road Condition',
-                                            'Pipe Leakage',
-                                            'Traffic Signals not Working',
-                                            'Poor side walks',
-                                            'No zebra Crossing',
-                                            'Other Issues',
-                                          ].map<DropdownMenuItem<String>>(
-                                              (String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _chosenValue1 = value;
-                                              if (_chosenValue1 ==
-                                                  'Poor Road Condition') {
-                                                icon = 0.0;
-                                              }
-                                            });
-                                          },
-                                          icon: Icon(null),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  if (!isKeyboard)
-                                    SizedBox(
-                                      height: width * 0.03,
+                                              color: Color(0xff1c6758),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: font2)),
                                     ),
-                                  TextField(
-                                    cursorColor: Color(0xff1c6758),
-                                    controller: issueTf,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 3,
-                                    decoration: InputDecoration(
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Color(0xff1c6758))),
-                                        border: OutlineInputBorder(),
-                                        hintText:
-                                            'Enter description on the issue'),
-                                    style:
-                                        GoogleFonts.urbanist(fontSize: font3),
-                                  )
-                                ],
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    TextButton(
+                                      child: Text('OK',
+                                          style: GoogleFonts.urbanist(
+                                              color: Color(0xff1c6758),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: font2)),
+                                      onPressed: () {
+                                        //_addMarker();
+                                        _addMarkerToFirestore();
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                              content: Container(
+                                height: h,
+                                child: Column(
+                                  children: [
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text('Select Issue:',
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: font3,
+                                            ))),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.info_outline_rounded),
+                                        SizedBox(
+                                          width: width * 0.03,
+                                        ),
+                                        Container(
+                                          width: width * 0.53,
+                                          child: DropdownButton(
+                                            style: GoogleFonts.urbanist(
+                                                fontSize: font3,
+                                                color: Colors.black),
+                                            dropdownColor: Color.fromRGBO(
+                                                217, 233, 230, 1),
+                                            value: _chosenValue1,
+                                            items: <String>[
+                                              'Poor Road Condition',
+                                              'Pipe Leakage',
+                                              'Traffic Signals not Working',
+                                              'Poor side walks',
+                                              'No zebra Crossing',
+                                              'Other Issues',
+                                            ].map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _chosenValue1 = value;
+                                                if (_chosenValue1 ==
+                                                    'Poor Road Condition') {
+                                                  icon = 0.0;
+                                                }
+                                              });
+                                            },
+                                            icon: Icon(null),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    if (!isKeyboard)
+                                      SizedBox(
+                                        height: width * 0.03,
+                                      ),
+                                    TextField(
+                                      cursorColor: Color(0xff1c6758),
+                                      controller: issueTf,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: 3,
+                                      decoration: InputDecoration(
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color(0xff1c6758))),
+                                          border: OutlineInputBorder(),
+                                          hintText:
+                                              'Enter description on the issue'),
+                                      style:
+                                          GoogleFonts.urbanist(fontSize: font3),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    });
-                setState(() {
-                  _chosenValue1 = 'Poor Road Condition';
-                  issueTf.clear();
-                });
-              },
-              icon: const Icon(Icons.report_problem_rounded),
-              color: Color.fromRGBO(28, 103, 88, 1),
-            )
-          ],
+                            );
+                          },
+                        );
+                      });
+                  setState(() {
+                    _chosenValue1 = 'Poor Road Condition';
+                    issueTf.clear();
+                  });
+                },
+                icon: const Icon(Icons.report_problem_rounded),
+                color: Color.fromRGBO(28, 103, 88, 1),
+              )
+            ],
+          ),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(40)),
+              color: Color.fromRGBO(217, 233, 230, 1)),
         ),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(40)),
-            color: Color.fromRGBO(217, 233, 230, 1)),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 

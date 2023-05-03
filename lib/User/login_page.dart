@@ -1,4 +1,5 @@
 import 'package:eazygo_map/User/create_acc.dart';
+import 'package:eazygo_map/User/login_email.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -82,7 +83,7 @@ class _login_pageState extends State<login_page> {
                               Navigator.push(
                                   context,
                                   (MaterialPageRoute(
-                                      builder: (context) => login_phone())));
+                                      builder: (context) => login_email())));
                             },
                             style: ButtonStyle(
                                 shape: MaterialStateProperty.all(

@@ -1,6 +1,12 @@
+import 'package:eazygo_map/Profile/ContactUs.dart';
 import 'package:eazygo_map/User/create_profile.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'create_accPhn.dart';
+import '../variables.dart';
 
 class create_acc extends StatefulWidget {
   const create_acc({super.key});
@@ -10,10 +16,22 @@ class create_acc extends StatefulWidget {
 }
 
 class _create_accState extends State<create_acc> {
+  final TextEditingController mail = TextEditingController();
+  final TextEditingController pass1 = TextEditingController();
+  final TextEditingController pass2 = TextEditingController();
+
+  var errormessage = "";
+  bool _isvisible = false;
+
   @override
   var isHidden1 = true;
   var isHidden2 = true;
   Widget build(BuildContext context) {
+    void dispose() {
+      mail.dispose();
+      super.dispose();
+    }
+
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -62,72 +80,78 @@ class _create_accState extends State<create_acc> {
               ),
             if (!isKeyboard)
               SizedBox(
-                height: height * 0.01,
+                height: height * 0.05,
               ),
+
             /*image
               starts
               from
-              her*/
-            if (!isKeyboard)
-              Container(
-                alignment: Alignment.center,
-                height: height * 0.26,
-                child: Image.asset(
-                  'images/image 10.png',
+              here*/
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Container(
+                height: height * 0.08,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  color: Color(0xffC3E5DF),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: height * 0.06,
+                      width: width * 0.4,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black),
+                        child: Text(
+                          'Email',
+                          style: GoogleFonts.urbanist(
+                              fontSize: font, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: width * 0.04,
+                    ),
+                    SizedBox(
+                      height: height * 0.06,
+                      width: width * 0.4,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              (MaterialPageRoute(
+                                  builder: (context) => create_accPhn())));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            foregroundColor: Colors.black),
+                        child: Text(
+                          'Phone Number',
+                          style: GoogleFonts.urbanist(
+                              fontSize: font, fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+            ),
+            SizedBox(
+              height: height * 0.01,
+            ),
             /*Text field 1
         starts
         here*/
             SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(
-                    height: height * 0.01,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 30, right: 30),
-                    child: Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Smaller TextField
-                          SizedBox(
-                            width: 30,
-                            child: TextFormField(
-                              initialValue: '+91',
-                              style: GoogleFonts.urbanist(
-                                  color: Color.fromRGBO(155, 155, 155, 1),
-                                  fontWeight: FontWeight.w500),
-                              decoration: InputDecoration(
-                                enabled: false,
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xff1c6758))),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              cursorColor: Color.fromRGBO(28, 103, 88, 1),
-                              style: GoogleFonts.urbanist(
-                                  fontWeight: FontWeight.w500),
-                              decoration: InputDecoration(
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xff1c6758))),
-                                hintStyle: GoogleFonts.urbanist(fontSize: font),
-                                hintText: 'Phone Number',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   SizedBox(
                     height: height * 0.01,
                   ),
@@ -159,7 +183,14 @@ class _create_accState extends State<create_acc> {
                             width: 8,
                           ),
                           Expanded(
-                            child: TextField(
+                            child: TextFormField(
+                              controller: mail,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (mail) =>
+                                  mail != null && !EmailValidator.validate(mail)
+                                      ? 'Enter a valid email'
+                                      : null,
                               cursorColor: Color.fromRGBO(28, 103, 88, 1),
                               style: GoogleFonts.urbanist(
                                   fontWeight: FontWeight.w500),
@@ -208,6 +239,7 @@ class _create_accState extends State<create_acc> {
                           ),
                           Expanded(
                             child: TextField(
+                              controller: pass1,
                               obscureText: isHidden1,
                               cursorColor: Color.fromRGBO(28, 103, 88, 1),
                               style: GoogleFonts.urbanist(
@@ -267,6 +299,7 @@ class _create_accState extends State<create_acc> {
                           ),
                           Expanded(
                             child: TextField(
+                              controller: pass2,
                               obscureText: isHidden2,
                               cursorColor: Color.fromRGBO(28, 103, 88, 1),
                               style: GoogleFonts.urbanist(
@@ -294,6 +327,17 @@ class _create_accState extends State<create_acc> {
                       ),
                     ),
                   ),
+                  if (!isKeyboard)
+                    SizedBox(
+                      height: height * 0.005,
+                    ),
+                  Visibility(
+                    visible: _isvisible,
+                    child: Text(
+                      '$errormessage',
+                      style: TextStyle(color: Color.fromARGB(255, 218, 8, 8)),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -317,11 +361,70 @@ class _create_accState extends State<create_acc> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                (MaterialPageRoute(
-                                    builder: (context) =>
-                                        const create_profile())));
+                            provider = mail.text;
+                            if (pass1.text == null || mail.text.isEmpty) {
+                              if (pass1.text != pass2.text) {
+                                setState(() {
+                                  _isvisible = true;
+                                });
+                                Future.delayed(const Duration(seconds: 2), () {
+                                  setState(() {
+                                    _isvisible = false;
+                                  });
+                                });
+
+                                errormessage = "Password Doesn't Match";
+                              } else {
+                                setState(() {
+                                  _isvisible = true;
+                                });
+                                Future.delayed(const Duration(seconds: 2), () {
+                                  setState(() {
+                                    _isvisible = false;
+                                  });
+                                });
+
+                                errormessage = "Email Or Password is Empty";
+                              }
+                            } else if (pass1.text == pass2.text) {
+                              FirebaseAuth.instance
+                                  .createUserWithEmailAndPassword(
+                                      email: mail.text, password: pass2.text)
+                                  .then((value) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Registered successfully"),
+                                    duration: Duration(seconds: 2),
+                                    backgroundColor: Color(0xff1c6758),
+                                  ),
+                                );
+                              }).onError((error, stackTrace) {
+                                print("Error SignUp:${error.toString()}");
+                                if (error is FirebaseAuthException) {
+                                  if (error.code == 'email-already-in-use') {
+                                    // Email is already in use by another account
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text('Email is already Registered'),
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Color(0xff1c6758),
+                                      ),
+                                    );
+                                  }
+                                }
+                              });
+                              Navigator.push(
+                                  context,
+                                  (MaterialPageRoute(
+                                      builder: (context) => create_profile())));
+                            }
+
+                            setState(() {
+                              mail.clear();
+                              pass1.clear();
+                              pass2.clear();
+                            });
                           },
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all(

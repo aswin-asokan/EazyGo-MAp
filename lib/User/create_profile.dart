@@ -1,9 +1,13 @@
+import 'package:eazygo_map/User/login_email.dart';
+import 'package:eazygo_map/variables.dart';
+import 'package:eazygo_map/Map/map.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class create_profile extends StatefulWidget {
   const create_profile({super.key});
-
   @override
   State<create_profile> createState() => _create_profileState();
 }
@@ -14,7 +18,14 @@ class _create_profileState extends State<create_profile> {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final CollectionReference _users =
+        FirebaseFirestore.instance.collection('USERS');
+
+    TextEditingController fullname = TextEditingController();
+    TextEditingController location = TextEditingController();
+    bool loding = false;
     final font, size1, size2, rad, l, t;
+    var userId, docId;
     if (width < 350) {
       font = width * 0.04;
       rad = width * 0.25;
@@ -47,17 +58,15 @@ class _create_profileState extends State<create_profile> {
                 /*Text
           starts
           here*/
-                if (!isKeyboard)
-                  Text('Create Profile',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.urbanist(
-                          color: Color(0xff1c6758),
-                          fontSize: height * 0.04,
-                          fontWeight: FontWeight.w700)),
-                if (!isKeyboard)
-                  SizedBox(
-                    height: height * 0.05,
-                  ),
+                Text('Create Profile',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.urbanist(
+                        color: Color(0xff1c6758),
+                        fontSize: height * 0.04,
+                        fontWeight: FontWeight.w700)),
+                SizedBox(
+                  height: height * 0.05,
+                ),
                 if (!isKeyboard)
                   Stack(
                     children: [
@@ -68,7 +77,7 @@ class _create_profileState extends State<create_profile> {
                       ),*/
                       CircleAvatar(
                         child: Image.asset(
-                          'images/Group 129.png',
+                          img,
                         ),
                         radius: rad,
                         backgroundColor: Color(0xffC3E5DF),
@@ -79,7 +88,61 @@ class _create_profileState extends State<create_profile> {
                           child: IconButton(
                             iconSize: 30,
                             color: Color(0xff1c6758),
-                            onPressed: () {},
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      height: height * 0.3,
+                                      color: Colors.white,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: height * 0.02,
+                                          ),
+                                          Text('Choose image',
+                                              style: GoogleFonts.urbanist(
+                                                  color: Color(0xff1c6758),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: height * 0.03)),
+                                          SizedBox(
+                                            height: height * 0.02,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  img =
+                                                      'images/kindpng_1636340.png';
+                                                  setState(() {});
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Image.asset(
+                                                    height: width * 0.36,
+                                                    'images/kindpng_1636340.png'),
+                                              ),
+                                              SizedBox(
+                                                width: width * 0.08,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  img = 'images/pngegg.png';
+                                                  setState(() {});
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Image.asset(
+                                                    height: width * 0.36,
+                                                    'images/pngegg.png'),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            },
                             icon: Icon(Icons.add_a_photo_rounded),
                           ))
                     ],
@@ -93,52 +156,6 @@ class _create_profileState extends State<create_profile> {
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30, right: 30),
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Smaller TextField
-                              SizedBox(
-                                width: 30,
-                                child: TextField(
-                                  style: GoogleFonts.urbanist(
-                                      fontWeight: FontWeight.w500),
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.person_2_outlined),
-                                    enabled: false,
-                                    focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color(0xff1c6758))),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Expanded(
-                                child: TextField(
-                                  cursorColor: Color.fromRGBO(28, 103, 88, 1),
-                                  style: GoogleFonts.urbanist(
-                                      fontWeight: FontWeight.w500),
-                                  decoration: InputDecoration(
-                                    focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color(0xff1c6758))),
-                                    hintStyle:
-                                        GoogleFonts.urbanist(fontSize: font),
-                                    hintText: 'User Name',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
                       /*textfield 2
                   starts
                   here*/
@@ -168,6 +185,7 @@ class _create_profileState extends State<create_profile> {
                               ),
                               Expanded(
                                 child: TextField(
+                                  controller: fullname,
                                   cursorColor: Color.fromRGBO(28, 103, 88, 1),
                                   style: GoogleFonts.urbanist(
                                       fontWeight: FontWeight.w500),
@@ -177,7 +195,7 @@ class _create_profileState extends State<create_profile> {
                                             color: Color(0xff1c6758))),
                                     hintStyle:
                                         GoogleFonts.urbanist(fontSize: font),
-                                    hintText: 'Full Name',
+                                    hintText: 'User Name',
                                   ),
                                 ),
                               ),
@@ -218,6 +236,7 @@ class _create_profileState extends State<create_profile> {
                               ),
                               Expanded(
                                 child: TextField(
+                                  controller: location,
                                   cursorColor: Color.fromRGBO(28, 103, 88, 1),
                                   style: GoogleFonts.urbanist(
                                       fontWeight: FontWeight.w500),
@@ -257,7 +276,26 @@ class _create_profileState extends State<create_profile> {
                               height: height * 0.06,
                               width: double.infinity,
                               child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    final String name = fullname.text;
+                                    final String loc = location.text;
+
+                                    final user =
+                                        FirebaseAuth.instance.currentUser;
+                                    if (name != null && loc != null) {
+                                      await _users.add({
+                                        'provider': provider,
+                                        "Name": name,
+                                        "Location": loc,
+                                        "image": img
+                                      });
+                                    }
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: ((context) =>
+                                                const login_email())));
+                                  },
                                   style: ButtonStyle(
                                       shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(

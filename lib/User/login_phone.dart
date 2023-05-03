@@ -1,11 +1,15 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eazygo_map/User/create_acc.dart';
+import 'package:eazygo_map/User/create_accPhn.dart';
 import 'package:eazygo_map/User/login_email.dart';
-import 'package:eazygo_map/User/req_otp.dart';
+import 'package:eazygo_map/Map/map.dart';
+import 'package:eazygo_map/variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../navbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class login_phone extends StatefulWidget {
   const login_phone({super.key});
@@ -15,10 +19,30 @@ class login_phone extends StatefulWidget {
 }
 
 class _login_phoneState extends State<login_phone> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  @override
+  void initState() {
+    super.initState();
+    checkLoggedIn();
+  }
 
-// Define a function that generates an OTP and starts the verification process
+  bool _isLoggedIn = false;
+// Create an instance of the FirebaseAuth class
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<void> checkLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    phVal = prefs.getString('phoneNumber');
+    ver = prefs.getString('verificationId');
+
+    if (phVal != null && ver != null) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: ((context) => const Map())));
+      setState(() {});
+    }
+  }
+
   void generateOTP(String phoneNumber) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phoneNumber', phoneNumber);
     // Call verifyPhoneNumber() to start the OTP verification process
     await _auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
@@ -29,6 +53,11 @@ class _login_phoneState extends State<login_phone> {
       verificationFailed: (error) {
         // Called when the verification fails (e.g. if the phone number is invalid)
         print(error.toString());
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Error Try Again Later'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Color(0xff1c6758),
+        ));
       },
       codeSent: (verificationId, resendToken) {
         // Called when the OTP code is sent to the user's phone number
@@ -40,31 +69,57 @@ class _login_phoneState extends State<login_phone> {
           context: context,
           barrierDismissible: false,
           builder: (context) => AlertDialog(
-            title: Text('Enter Verification Code'),
+            title: Text(
+              'OTP Verification',
+              style: GoogleFonts.urbanist(
+                  color: Color(0xff1c6758),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25),
+            ),
             content: TextField(
+              textAlign: TextAlign.center,
+              maxLength: 6,
+              cursorColor: Color(0xff1c6758),
+              decoration: InputDecoration(
+                counterText: '',
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xff1c6758))),
+                hintStyle: GoogleFonts.urbanist(fontSize: 15),
+                hintText: 'Enter OTP here',
+              ),
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 smsCode = value;
               },
             ),
             actions: <Widget>[
-              ElevatedButton(
-                child: Text('Done'),
-                onPressed: () async {
-                  // Call signInWithCredential() to sign in with the OTP code
-                  AuthCredential credential = PhoneAuthProvider.credential(
-                      verificationId: verificationId, smsCode: smsCode);
-                  await _auth.signInWithCredential(credential);
-                  Navigator.pop(context);
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) => const NavBar())));
-                },
+              Align(
+                alignment: Alignment.center,
+                child: TextButton(
+                  child: Text(
+                    'OK',
+                    style: GoogleFonts.urbanist(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xff1c6758)),
+                  ),
+                  onPressed: () async {
+                    // Call signInWithCredential() to sign in with the OTP code
+                    AuthCredential credential = PhoneAuthProvider.credential(
+                        verificationId: verificationId, smsCode: smsCode);
+                    await _auth.signInWithCredential(credential);
+
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: ((context) => const Map())));
+                  },
+                ),
               )
             ],
           ),
         );
+        SharedPreferences prefs =
+            SharedPreferences.getInstance() as SharedPreferences;
+        prefs.setString('verificationId', verificationId);
       },
       codeAutoRetrievalTimeout: (verificationId) {},
       timeout: Duration(seconds: 60),
@@ -73,6 +128,7 @@ class _login_phoneState extends State<login_phone> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController phoneNum = TextEditingController();
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -89,7 +145,6 @@ class _login_phoneState extends State<login_phone> {
       size = height * 0.03;
       size2 = height * 0.06;
     }
-    TextEditingController _phone = TextEditingController();
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.white,
@@ -142,29 +197,9 @@ class _login_phoneState extends State<login_phone> {
                     SizedBox(
                       height: height * 0.06,
                       width: width * 0.4,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black),
-                        child: Text(
-                          'Phone Number',
-                          style: GoogleFonts.urbanist(
-                              fontSize: font, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 0.04,
-                    ),
-                    SizedBox(
-                      height: height * 0.06,
-                      width: width * 0.4,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.pop(
                               context,
                               (MaterialPageRoute(
                                   builder: (context) => login_email())));
@@ -177,6 +212,26 @@ class _login_phoneState extends State<login_phone> {
                           'Email',
                           style: GoogleFonts.urbanist(
                               fontSize: font, fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: width * 0.04,
+                    ),
+                    SizedBox(
+                      height: height * 0.06,
+                      width: width * 0.4,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black),
+                        child: Text(
+                          'Phone Number',
+                          style: GoogleFonts.urbanist(
+                              fontSize: font, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -217,11 +272,13 @@ class _login_phoneState extends State<login_phone> {
                     ),
                     Expanded(
                       child: TextField(
-                        controller: _phone,
+                        maxLength: 10,
+                        controller: phoneNum,
                         cursorColor: Color.fromRGBO(28, 103, 88, 1),
                         style:
                             GoogleFonts.urbanist(fontWeight: FontWeight.w500),
                         decoration: InputDecoration(
+                          counterText: '',
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Color(0xff1c6758))),
                           hintStyle: GoogleFonts.urbanist(fontSize: font),
@@ -253,9 +310,33 @@ class _login_phoneState extends State<login_phone> {
                     height: height * 0.06,
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: () {
-                          String phn = _phone.text;
-                          generateOTP('+91' + phn);
+                        onPressed: () async {
+                          ph = phoneNum.text;
+                          QuerySnapshot querySnapshot = await FirebaseFirestore
+                              .instance
+                              .collection('USERS')
+                              .where('provider', isEqualTo: ph)
+                              .get();
+                          if (querySnapshot.docs.isNotEmpty) {
+                            for (var doc in querySnapshot.docs) {
+                              prov = doc['provider'];
+                              provider = prov;
+                              userName = doc['Name'];
+                              img = doc['image'];
+                              location = doc['Location'];
+                            }
+                          }
+                          if (ph == prov) {
+                            generateOTP('+91' + phoneNum.text);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Phone number not registered'),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Color(0xff1c6758),
+                            ));
+                          }
+
+                          //
                         },
                         style: ButtonStyle(
                             shape: MaterialStateProperty.all(
@@ -292,7 +373,8 @@ class _login_phoneState extends State<login_phone> {
                             Navigator.push(
                                 context,
                                 (MaterialPageRoute(
-                                    builder: (context) => const create_acc())));
+                                    builder: (context) =>
+                                        const create_accPhn())));
                           },
                           child: Text(
                             'Create an account',
