@@ -374,6 +374,7 @@ class _MapState extends State<Map> {
                   icon: Icon(Icons.location_on_rounded),
                   iconSize: width * 0.07,
                   color: Color.fromRGBO(28, 103, 88, 1)),
+<<<<<<< Updated upstream
             ),
             IconButton(
               iconSize: width * 0.07,
@@ -431,6 +432,46 @@ class _MapState extends State<Map> {
                                   Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text('Select Issue:',
+=======
+              IconButton(
+                  onPressed: () {
+                    _getUsersFromFirestore();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => const profilePage())));
+                    print('image:' + img);
+                  },
+                  icon: Icon(Icons.person_2_rounded),
+                  iconSize: width * 0.07,
+                  color: Color.fromRGBO(28, 103, 88, 1)),
+              IconButton(
+                iconSize: width * 0.07,
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        bool testBool = true;
+                        return StatefulBuilder(
+                          builder: (context, setState) {
+                            return AlertDialog(
+                              title: Text('Make Report',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.urbanist(
+                                      color: Color(0xff1c6758),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: font1)),
+                              backgroundColor: Color.fromRGBO(217, 233, 230, 1),
+                              actions: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancel',
+>>>>>>> Stashed changes
                                           style: GoogleFonts.urbanist(
                                             fontSize: font3,
                                           ))),
