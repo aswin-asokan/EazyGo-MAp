@@ -78,8 +78,11 @@ class _create_profileState extends State<create_profilPhone> {
                             shape: BoxShape.circle, color: Color(0xffC3E5DF)),
                       ),*/
                       CircleAvatar(
-                        child: Image.asset(
-                          img,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(rad),
+                          child: Image.asset(
+                            img,
+                          ),
                         ),
                         radius: rad,
                         backgroundColor: Color(0xffC3E5DF),

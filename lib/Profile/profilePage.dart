@@ -44,7 +44,7 @@ class _profilePageState extends State<profilePage> {
               height: 15,
             ),
             profileButton1(
-                title: "Edit Profile",
+                title: "Your Profile",
                 icon: Icons.edit,
                 context: context,
                 page: editProfile()),

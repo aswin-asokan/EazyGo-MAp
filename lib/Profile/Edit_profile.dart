@@ -46,7 +46,7 @@ class _editProfileState extends State<editProfile> {
               height: 5,
             ),
             Title_m(
-                Title: "Edit Profile", context: context, Page: profilePage()),
+                Title: "Your Profile", context: context, Page: profilePage()),
             // SizedBox(
             //   height: 20,
             // ),
@@ -88,7 +88,7 @@ class _editProfileState extends State<editProfile> {
             SizedBox(
               height: 60,
             ),
-            ElevatedButton(
+            /*ElevatedButton(
                 onPressed: () async {
                   String userB = un.text;
                   String locater = l.text;
@@ -106,7 +106,7 @@ class _editProfileState extends State<editProfile> {
                   }
                 },
                 child: Text("data")),
-            MyButton(Title: "submit", onPress: () async {})
+            MyButton(Title: "submit", onPress: () async {})*/
           ],
         ),
       )),

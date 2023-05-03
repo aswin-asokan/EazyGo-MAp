@@ -362,8 +362,10 @@ class _create_accState extends State<create_acc> {
                       child: ElevatedButton(
                           onPressed: () {
                             provider = mail.text;
-                            if (pass1.text == null || mail.text.isEmpty) {
-                              if (pass1.text != pass2.text) {
+                            if (pass1.text.isEmpty ||
+                                mail.text.isEmpty ||
+                                pass2.text.isEmpty) {
+                              /*if (pass1.text != pass2.text) {
                                 setState(() {
                                   _isvisible = true;
                                 });
@@ -374,6 +376,14 @@ class _create_accState extends State<create_acc> {
                                 });
 
                                 errormessage = "Password Doesn't Match";
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Email is already Registered'),
+                                    duration: Duration(seconds: 2),
+                                    backgroundColor: Color(0xff1c6758),
+                                  ),
+                                );
                               } else {
                                 setState(() {
                                   _isvisible = true;
@@ -385,8 +395,25 @@ class _create_accState extends State<create_acc> {
                                 });
 
                                 errormessage = "Email Or Password is Empty";
-                              }
-                            } else if (pass1.text == pass2.text) {
+                              }*/
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text('Email or Password field is Empty'),
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: Color(0xff1c6758),
+                                ),
+                              );
+                            } else if (pass1.text != pass2.text) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Password doesn\'t match'),
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: Color(0xff1c6758),
+                                ),
+                              );
+                            } else if (pass1.text.isNotEmpty ==
+                                pass2.text.isNotEmpty) {
                               FirebaseAuth.instance
                                   .createUserWithEmailAndPassword(
                                       email: mail.text, password: pass2.text)
@@ -398,6 +425,11 @@ class _create_accState extends State<create_acc> {
                                     backgroundColor: Color(0xff1c6758),
                                   ),
                                 );
+                                Navigator.push(
+                                    context,
+                                    (MaterialPageRoute(
+                                        builder: (context) =>
+                                            create_profile())));
                               }).onError((error, stackTrace) {
                                 print("Error SignUp:${error.toString()}");
                                 if (error is FirebaseAuthException) {
@@ -414,10 +446,6 @@ class _create_accState extends State<create_acc> {
                                   }
                                 }
                               });
-                              Navigator.push(
-                                  context,
-                                  (MaterialPageRoute(
-                                      builder: (context) => create_profile())));
                             }
 
                             setState(() {
