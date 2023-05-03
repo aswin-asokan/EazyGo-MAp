@@ -1,4 +1,5 @@
-import 'package:eazygo_map/User/login_email.dart';
+import 'package:eazygo_map/Profile/SourceScreen/Variables.dart';
+import 'package:eazygo_map/User/login_phone.dart';
 import 'package:eazygo_map/variables.dart';
 import 'package:eazygo_map/Map/map.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class create_profile extends StatefulWidget {
-  const create_profile({super.key});
+class create_profilPhone extends StatefulWidget {
+  const create_profilPhone({super.key});
   @override
-  State<create_profile> createState() => _create_profileState();
+  State<create_profilPhone> createState() => _create_profileState();
 }
 
-class _create_profileState extends State<create_profile> {
+class _create_profileState extends State<create_profilPhone> {
   @override
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
@@ -46,6 +47,7 @@ class _create_profileState extends State<create_profile> {
       size1 = height * 0.02;
       size2 = height * 0.06;
     }
+
     return SafeArea(
         child: Scaffold(
             backgroundColor: Colors.white,
@@ -77,7 +79,7 @@ class _create_profileState extends State<create_profile> {
                       ),*/
                       CircleAvatar(
                         child: Image.asset(
-                          img,
+                          img!,
                         ),
                         radius: rad,
                         backgroundColor: Color(0xffC3E5DF),
@@ -284,17 +286,17 @@ class _create_profileState extends State<create_profile> {
                                         FirebaseAuth.instance.currentUser;
                                     if (name != null && loc != null) {
                                       await _users.add({
-                                        'provider': provider,
+                                        'provider': '$provider',
                                         "Name": name,
                                         "Location": loc,
-                                        "image": img
+                                        "image": '$img'
                                       });
                                     }
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                             builder: ((context) =>
-                                                const login_email())));
+                                                const login_phone())));
                                   },
                                   style: ButtonStyle(
                                       shape: MaterialStateProperty.all(

@@ -1,3 +1,6 @@
+import 'package:eazygo_map/Profile/ContactUs.dart';
+import 'package:eazygo_map/variables.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +11,10 @@ class req_otp extends StatefulWidget {
   @override
   State<req_otp> createState() => _req_otpState();
 }
+
+FirebaseAuth _auth = FirebaseAuth.instance;
+
+String smsCode = '';
 
 class _req_otpState extends State<req_otp> {
   @override
@@ -102,16 +109,19 @@ class _req_otpState extends State<req_otp> {
               OtpTextField(
                 filled: true,
                 fillColor: Color(0xffC3E5DF),
-                numberOfFields: 4,
+                numberOfFields: 6,
                 textStyle: GoogleFonts.urbanist(
-                    fontSize: 25, color: Color(0xff1c6758)),
-                fieldWidth: width * 0.16,
+                    fontSize: width * 0.07, color: Color(0xff1c6758)),
+                fieldWidth: width * 0.12,
                 showFieldAsBox: true,
                 enabledBorderColor: Color(0xffC3E5DF),
                 borderColor: Color(0xffC3E5DF),
                 disabledBorderColor: Color(0xffC3E5DF),
                 focusedBorderColor: Color(0xffC3E5DF),
                 cursorColor: Color(0xff1c6758),
+                onSubmit: (value) {
+                  smsCode = value;
+                },
               )
             ],
           ),
@@ -133,7 +143,75 @@ class _req_otpState extends State<req_otp> {
                       height: height * 0.06,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await _auth.verifyPhoneNumber(
+                              verificationCompleted: (phoneAuthCredential) {
+                                // Called when the verification is complete automatically (e.g. when testing on iOS)
+                                _auth.signInWithCredential(phoneAuthCredential);
+                              },
+                              verificationFailed: (error) {
+                                // Called when the verification fails (e.g. if the phone number is invalid)
+                                print(error.toString());
+                              },
+                              codeSent: (verificationId, resendToken) {
+                                // Called when the OTP code is sent to the user's phone number
+                                // Store the verification ID and the resend token in a local variable
+
+                                // Display a dialog box to the user to enter the OTP code
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) {
+                                    final wid =
+                                        MediaQuery.of(context as BuildContext)
+                                            .size
+                                            .width;
+                                    return AlertDialog(
+                                        title: Text(
+                                          'Enter Verification Code',
+                                        ),
+                                        content: OtpTextField(
+                                          filled: true,
+                                          fillColor: Color(0xffC3E5DF),
+                                          numberOfFields: 6,
+                                          textStyle: GoogleFonts.urbanist(
+                                              fontSize: wid * 0.06,
+                                              color: Color(0xff1c6758)),
+                                          showFieldAsBox: true,
+                                          fieldWidth: wid * 0.1,
+                                          enabledBorderColor: Color(0xffC3E5DF),
+                                          borderColor: Color(0xffC3E5DF),
+                                          disabledBorderColor:
+                                              Color(0xffC3E5DF),
+                                          focusedBorderColor: Color(0xffC3E5DF),
+                                          cursorColor: Color(0xff1c6758),
+                                          onSubmit: (value) {
+                                            smsCode = value;
+                                          },
+                                        ),
+                                        actions: <Widget>[
+                                          ElevatedButton(
+                                            child: Text('Done'),
+                                            onPressed: () async {
+                                              // Call signInWithCredential() to sign in with the OTP code
+                                              AuthCredential credential =
+                                                  PhoneAuthProvider.credential(
+                                                      verificationId:
+                                                          verificationId,
+                                                      smsCode: smsCode);
+                                              await _auth.signInWithCredential(
+                                                  credential);
+                                              Navigator.pop(context);
+                                            },
+                                          )
+                                        ]);
+                                  },
+                                );
+                              },
+                              codeAutoRetrievalTimeout: (verificationId) {},
+                              timeout: Duration(seconds: 60),
+                            );
+                          },
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(

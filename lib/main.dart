@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
+import 'Profile/SourceScreen/Variables.dart';
+
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -23,7 +25,9 @@ class MyApp extends StatelessWidget {
             create: (_) => AuthProvider(FirebaseAuth.instance)),
         StreamProvider(
             create: (context) => context.watch<AuthProvider>().stream(),
-            initialData: null)
+            initialData: null),
+        ChangeNotifierProvider(
+            create: (context) => ReportProvider(),)
       ],
       child: MaterialApp(
           home: AnimatedSplashScreen(
