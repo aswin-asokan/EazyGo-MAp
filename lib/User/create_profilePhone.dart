@@ -13,6 +13,9 @@ class create_profilPhone extends StatefulWidget {
   State<create_profilPhone> createState() => _create_profileState();
 }
 
+TextEditingController fullname = TextEditingController();
+TextEditingController location = TextEditingController();
+
 class _create_profileState extends State<create_profilPhone> {
   @override
   Widget build(BuildContext context) {
@@ -22,8 +25,6 @@ class _create_profileState extends State<create_profilPhone> {
     final CollectionReference _users =
         FirebaseFirestore.instance.collection('USERS');
 
-    TextEditingController fullname = TextEditingController();
-    TextEditingController location = TextEditingController();
     bool loding = false;
     final font, size1, size2, rad, l, t;
     var userId, docId;
@@ -72,11 +73,6 @@ class _create_profileState extends State<create_profilPhone> {
                 if (!isKeyboard)
                   Stack(
                     children: [
-                      /*Container(
-                        height: height * 0.2,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Color(0xffC3E5DF)),
-                      ),*/
                       CircleAvatar(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(rad),
@@ -284,22 +280,30 @@ class _create_profileState extends State<create_profilPhone> {
                                   onPressed: () async {
                                     final String name = fullname.text;
                                     final String loc = location.text;
-
-                                    final user =
-                                        FirebaseAuth.instance.currentUser;
-                                    if (name != null && loc != null) {
-                                      await _users.add({
-                                        'provider': '$provider',
-                                        "Name": name,
-                                        "Location": loc,
-                                        "image": '$img'
-                                      });
+                                    if (name.isEmpty || loc.isEmpty) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text('Enter all fields'),
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Color(0xff1c6758),
+                                      ));
+                                    } else {
+                                      final user =
+                                          FirebaseAuth.instance.currentUser;
+                                      if (name != null && loc != null) {
+                                        await _users.add({
+                                          'provider': '$provider',
+                                          "Name": name,
+                                          "Location": loc,
+                                          "image": '$img'
+                                        });
+                                      }
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  const login_phone())));
                                     }
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: ((context) =>
-                                                const login_phone())));
                                   },
                                   style: ButtonStyle(
                                       shape: MaterialStateProperty.all(

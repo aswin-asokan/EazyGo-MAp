@@ -1,16 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eazygo_map/User/login_phone.dart';
 import 'package:eazygo_map/User/passwordreset.dart';
-import 'package:eazygo_map/auth_prov.dart';
 import 'package:eazygo_map/Map/map.dart';
 import 'package:eazygo_map/variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'create_acc.dart';
-import 'package:eazygo_map/User/create_profile.dart';
 
 class login_email extends StatefulWidget {
   const login_email({super.key});
@@ -84,11 +81,6 @@ class _login_emailState extends State<login_email> {
       FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
-        /* final FirebaseAuth auth = FirebaseAuth.instance;
-                            final User? user = auth.currentUser;
-                            userId = user!.uid;
-                            String email = _email.text;*/
-
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: ((context) => const Map())));
       });
@@ -110,11 +102,6 @@ class _login_emailState extends State<login_email> {
     FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) async {
-      /* final FirebaseAuth auth = FirebaseAuth.instance;
-                            final User? user = auth.currentUser;
-                            userId = user!.uid;
-                            String email = _email.text;*/
-
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: ((context) => const Map())));
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -133,11 +120,6 @@ class _login_emailState extends State<login_email> {
           await prefs.setString('img', img);
           await prefs.setString('provider', provider!);
         }
-
-        // String email = _emailAddress.text;
-        // SharedPreferences prefs =
-        //     await SharedPreferences.getInstance();
-        // await prefs.setString('email', email);
       } else {
         print('No document found with email: $provider');
       }
@@ -168,7 +150,6 @@ class _login_emailState extends State<login_email> {
       size1 = height * 0.02;
       size2 = height * 0.06;
     }
-    final authProvider = context.watch<AuthProvider>();
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -285,7 +266,10 @@ class _login_emailState extends State<login_email> {
                               style: GoogleFonts.urbanist(
                                   fontWeight: FontWeight.w500),
                               decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.alternate_email_rounded),
+                                prefixIcon: Icon(
+                                  Icons.alternate_email_rounded,
+                                  size: font,
+                                ),
                                 enabled: false,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide:
@@ -334,7 +318,10 @@ class _login_emailState extends State<login_email> {
                               style: GoogleFonts.urbanist(
                                   fontWeight: FontWeight.w500),
                               decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.lock_outline_rounded),
+                                prefixIcon: Icon(
+                                  Icons.lock_outline_rounded,
+                                  size: font,
+                                ),
                                 enabled: false,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide:

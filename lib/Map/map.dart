@@ -1,5 +1,5 @@
-import 'dart:ffi';
-
+import 'package:eazygo_map/Profile/ContactUs.dart';
+import 'package:eazygo_map/Profile/SourceScreen/Variables.dart';
 import 'package:eazygo_map/Profile/profilePage.dart';
 import 'package:eazygo_map/variables.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 class Map extends StatefulWidget {
@@ -41,9 +42,19 @@ class _MapState extends State<Map> {
   Color color1 = Color.fromRGBO(217, 233, 230, 1);
   Color color2 = Color(0xff1c6758);
 
-  /*icon 
-  specified
-  here*/
+  void _getUsersFromFirestore() {
+    FirebaseFirestore.instance
+        .collection('USERS')
+        .snapshots()
+        .listen((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        location = doc['Location'];
+        userName = doc['Name'];
+        img = doc['image'];
+        provider = doc['provider'];
+      }
+    });
+  }
 
   /*current
   location
@@ -96,6 +107,18 @@ class _MapState extends State<Map> {
     String? markerID = const Uuid().v4();
     await FirebaseFirestore.instance.collection('markers').add({
       'id': markerID,
+      'provider': provider,
+      'user': userName,
+      'position': GeoPoint(currentposition.latitude, currentposition.longitude),
+      'title': '$_chosenValue1',
+      'description': description,
+      'color': color,
+      'visible': true
+    });
+    await FirebaseFirestore.instance.collection('markersAuth').add({
+      'id': markerID,
+      'provider': provider,
+      'user': userName,
       'position': GeoPoint(currentposition.latitude, currentposition.longitude),
       'title': '$_chosenValue1',
       'description': description,
@@ -114,6 +137,7 @@ class _MapState extends State<Map> {
       for (var doc in querySnapshot.docs) {
         GeoPoint position = doc['position'];
         String title = doc['title'];
+        String n = doc['user'];
         String description = doc['description'];
         String id = doc['id'];
         String color = doc['color'];
@@ -165,136 +189,37 @@ class _MapState extends State<Map> {
                                 )),
                           ),
                           Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Report made by: $n',
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: font2,
+                                  ),
+                                )),
+                          ),
+                          Padding(
                             padding: EdgeInsets.only(left: 15),
                             child: Row(
                               children: [
                                 TextButton(
                                     onPressed: () async {
-                                      if (_counter == 1) {
-                                        _counter = 0;
-                                        QuerySnapshot querySnapshot =
-                                            await FirebaseFirestore.instance
-                                                .collection('markers')
-                                                .where('id', isEqualTo: id)
-                                                .get();
-                                        if (querySnapshot.docs.isNotEmpty) {
-                                          DocumentSnapshot documentSnapshot =
-                                              querySnapshot.docs.first;
-                                          await documentSnapshot.reference
-                                              .delete();
-                                        }
-                                        Navigator.pop(context);
-                                      } else {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                backgroundColor: color1,
-                                                title: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                      Icons
-                                                          .report_problem_rounded,
-                                                      color: Colors.red,
-                                                    ),
-                                                    Text(
-                                                      'WARNING',
-                                                      style:
-                                                          GoogleFonts.urbanist(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Colors.red,
-                                                              fontSize: font4),
-                                                    )
-                                                  ],
-                                                ),
-                                                actions: [
-                                                  RichText(
-                                                    textAlign: TextAlign.center,
-                                                    text: TextSpan(
-                                                      text:
-                                                          'You are about to remove a reported issue from the map. Before proceeding, please confirm that the reported issue is fixed by the authority. If you are sure that the issue is fixed press on ',
-                                                      style:
-                                                          GoogleFonts.urbanist(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: font2,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600),
-                                                      children: [
-                                                        TextSpan(
-                                                          text: 'Remove Issue',
-                                                          style: GoogleFonts
-                                                              .urbanist(
-                                                                  color: Colors
-                                                                      .red,
-                                                                  fontSize:
-                                                                      font2,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                        ),
-                                                        TextSpan(
-                                                          text:
-                                                              ' again to remove the marker after pressing ',
-                                                          style: GoogleFonts
-                                                              .urbanist(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                      font2,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                        ),
-                                                        TextSpan(
-                                                          text: 'OK',
-                                                          style: GoogleFonts
-                                                              .urbanist(
-                                                                  color: Colors
-                                                                      .red,
-                                                                  fontSize:
-                                                                      font2,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment: Alignment.center,
-                                                    child: TextButton(
-                                                        onPressed: () async {
-                                                          _counter++;
-                                                          // ignore: use_build_context_synchronously
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: Text(
-                                                          'OK',
-                                                          style: GoogleFonts
-                                                              .urbanist(
-                                                                  fontSize:
-                                                                      font2,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  color: Colors
-                                                                      .red),
-                                                        )),
-                                                  )
-                                                ],
-                                              );
-                                            });
-                                      }
+                                      String lat = position.latitude.toString();
+                                      String lon =
+                                          position.longitude.toString();
+                                      String body =
+                                          'Dear eazyGo team,\n\n I am writing to bring to your attention on a false report that I came across,\nlatitude:$lat\nlongitude:$lon\nIssue:$title\nUser:$n\nWhile looking through the map, I noticed that there are some inaccurate and misleading facts that could potentially misinform the users and authority.\n\n I believe that it is crucial to ensure that all information on your site is correct and up-to-date, as this can greatly impact the trust and credibility of your platform. I kindly request that you review and revise the content in question to ensure its accuracy.\n\nThank you for your attention to this matter.\n\nSincerely,\n\n[Your Name]';
+                                      Uri _emailLaunchUri = Uri(
+                                        scheme: 'mailto',
+                                        path: 'aswin_asokan@outlook.com',
+                                        query:
+                                            'subject=Report false issue&body=$body',
+                                      );
+                                      launchUrl(_emailLaunchUri);
                                     },
                                     child: Text(
-                                      'Remove Issue',
+                                      'Report Issue',
                                       style: GoogleFonts.urbanist(
                                           fontSize: font2,
                                           fontWeight: FontWeight.w500,
@@ -324,20 +249,6 @@ class _MapState extends State<Map> {
         markers.add(marker);
       }
       setState(() {});
-    });
-  }
-
-  void _getUsersFromFirestore() {
-    FirebaseFirestore.instance
-        .collection('USERS')
-        .snapshots()
-        .listen((querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        location = doc['Location'];
-        userName = doc['Name'];
-        img = doc['image'];
-        provider = doc['provider'];
-      }
     });
   }
 
@@ -407,7 +318,6 @@ class _MapState extends State<Map> {
                         context,
                         MaterialPageRoute(
                             builder: ((context) => const profilePage())));
-                    print('image:' + img);
                   },
                   icon: Icon(Icons.person_2_rounded),
                   iconSize: width * 0.07,

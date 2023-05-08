@@ -1,11 +1,3 @@
-// import 'package:eazygo_prof/screens/profilePage.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/src/widgets/framework.dart';
-// import 'package:flutter/src/widgets/placeholder.dart';
-// import 'package:url_launcher/url_launcher.dart';
-
-// import '../SourceScreen/Variables.dart';
-// import '../SourceScreen/widgets.dart';
 import 'package:flutter/material.dart';
 import 'SourceScreen/widgets.dart';
 import 'SourceScreen/Variables.dart';
@@ -35,7 +27,6 @@ class contactPage extends StatelessWidget {
               width: 250,
             ),
             Column(
-              //mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
@@ -50,7 +41,7 @@ class contactPage extends StatelessWidget {
                 ),
                 //SizedBox(height: 1,),
                 Text(
-                  "we are here to help! send us your query via the phone number below or send us through email for any issue you are facing",
+                  "We are here to help! send us your query via the phone number below or send us through email for any issue you are facing",
                   style: TextStyle(fontSize: 13, color: Colors.grey),
                 ),
                 SizedBox(
@@ -68,10 +59,8 @@ class contactPage extends StatelessWidget {
                           launchUrl(phoneNo);
                         },
                         child: Text("+91 6238303567",
-                            style: TextStyle(
-                                fontSize: 15,
-                                // fontWeight: FontWeight.bold,
-                                color: Colors.grey))),
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.grey))),
                   ],
                 ),
                 Row(
@@ -86,10 +75,7 @@ class contactPage extends StatelessWidget {
                           launchUrl(mail);
                         },
                         child: Text("aswin_asokan@outlook.com",
-                            style: TextStyle(
-                                fontSize: 15,
-                                // fontWeight: FontWeight.bold,
-                                color: Colors.grey)))
+                            style: TextStyle(fontSize: 15, color: Colors.grey)))
                   ],
                 )
               ],

@@ -1,24 +1,12 @@
-// ignore_for_file: prefer_if_null_operators, unnecessary_import
-
-// import 'dart:io';
-
-// import 'package:eazygo_prof/SourceScreen/Variables.dart';
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_svg/svg.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:path_provider/path_provider.dart';
-// import 'package:path/path.dart';
-
 import 'dart:io';
 
+import 'package:eazygo_map/Profile/editProfile.dart';
 import 'package:eazygo_map/User/login_page.dart';
 import 'package:eazygo_map/variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -122,17 +110,10 @@ class _profileState extends State<profile> with SingleTickerProviderStateMixin {
     return File(imagePath).copy(image.path);
   }
 
-  // void initState() {
-  //   super.initState();
-  //   setState(() {
-  //     _image = imagePermanent != null
-  //         ? imagePermanent
-  //         : File("images/noProfile.png");
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Container(
       margin: const EdgeInsets.all(20),
       width: double.infinity,
@@ -156,12 +137,66 @@ class _profileState extends State<profile> with SingleTickerProviderStateMixin {
             child: rotation(),
           ),
           Positioned(
-              top: 105,
-              left: 105,
-              child: icon_p(
-                  context: context,
-                  editCam: getImage_camera,
-                  editGal: getImage_gallery)),
+            top: 105,
+            left: 105,
+            child: IconButton(
+                color: Color(0xff1c6758),
+                iconSize: 30,
+                onPressed: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                          height: height * 0.3,
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: height * 0.02,
+                              ),
+                              Text('Choose image',
+                                  style: GoogleFonts.urbanist(
+                                      color: Color(0xff1c6758),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: height * 0.03)),
+                              SizedBox(
+                                height: height * 0.02,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      img = 'images/kindpng_1636340.png';
+                                      setState(() {});
+                                      Navigator.pop(context);
+                                    },
+                                    child: Image.asset(
+                                        height: width * 0.36,
+                                        'images/kindpng_1636340.png'),
+                                  ),
+                                  SizedBox(
+                                    width: width * 0.08,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      img = 'images/pngegg.png';
+                                      setState(() {});
+                                      Navigator.pop(context);
+                                    },
+                                    child: Image.asset(
+                                        height: width * 0.36,
+                                        'images/pngegg.png'),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      });
+                },
+                icon: Icon(Icons.add_a_photo_rounded)),
+          )
         ],
       ),
     );
@@ -169,39 +204,6 @@ class _profileState extends State<profile> with SingleTickerProviderStateMixin {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-Widget icon_p({
-  required var context,
-  //required VoidCallback? edit,
-  VoidCallback? editCam,
-  VoidCallback? editGal,
-}) {
-  return InkWell(
-    onTap: () {
-      //edit!();
-      //var context;
-      showModalBottomSheet(
-          context: context,
-          builder: ((BuildContext context) =>
-              bottomSheet_image(editCam: editCam, editgall: editGal)));
-    },
-    child: Container(
-        height: 30,
-        width: 30,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50), color: Colors.teal),
-        child: Center(
-          child: Transform.scale(
-            scale: .8,
-            child: SvgPicture.asset(
-              "images/svg/editIcon.svg",
-              allowDrawingOutsideViewBox: false,
-              fit: BoxFit.scaleDown,
-            ),
-          ),
-        )),
-  );
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -240,8 +242,6 @@ Widget bottomSheet_image({VoidCallback? editCam, VoidCallback? editgall}) {
             ),
             InkWell(
               onTap: () {
-                // profile(key: _myProfileKey);
-                // _myProfileKey.currentState?.getImage(ImageSource.gallery);
                 editgall!();
               },
               splashColor: Colors.grey[100],
@@ -293,7 +293,6 @@ class _card_CheckboxState extends State<card_Checkbox> {
   bool? Checkbox_value = true;
   bool _isActive = true;
   late bool _line_visible;
-  // Color m_color=_isActive? Color(0xff1C6758): Color(0xff686868);
   @override
   void initState() {
     super.initState();
@@ -345,8 +344,6 @@ class _card_CheckboxState extends State<card_Checkbox> {
                         ),
                       ],
                     )),
-                //  Expanded(flex: 1, child: Text(_title,style: TextStyle( fontSize: 18),)),
-                // Text(_notice!,style: TextStyle(fontSize: 10),),
                 Checkbox(
                   value: _isActive ? Checkbox_value : Checkbox_value = false,
                   onChanged: (value) {
@@ -437,92 +434,6 @@ Widget card(
     ),
   );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Widget set_list({required String Text_in, required bool Visibility_n}) {
-//   return InkWell(
-//     splashColor: Colors.lightGreen[600],
-//     onTap: () {},
-//     child: Container(
-//       padding: EdgeInsets.only(top: 2),
-//       width: double.infinity,
-//       child: Column(
-//         children: [
-//           Container(
-//             height: 35,
-//             child: Stack(
-//               //  mainAxisAlignment: MainAxisAlignment.end,
-//               // ignore: prefer_const_literals_to_create_immutables
-//               children: [
-//                 Align(
-//                     alignment: Alignment.centerLeft,
-//                     child:
-//                         //ImageIcon(AssetImage("assets/images/Vector.png"))
-//                         Image(
-//                             width: 18,
-//                             height: 24,
-//                             image: AssetImage("assets/icon.png"))),
-//                 SizedBox(
-//                   width: 20,
-//                 ),
-//                 Align(
-//                   alignment: Alignment(-.4, 0),
-//                   child: Text(
-//                     Text_in,
-//                     style: TextStyle(fontSize: 18),
-//                   ),
-//                 ),
-//                 Container(
-//                   child: Align(
-//                       alignment: Alignment.centerRight,
-//                       child: Icon(Icons.arrow_forward_ios_rounded)),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           Visibility(
-//             visible: Visibility_n,
-//             child: Divider(
-//               color: Colors.black,
-//               thickness: 1,
-//             ),
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
-
-// Widget Title_m({
-//   required var Title,
-//   var Page,
-//   var context,
-// }) {
-//   return Container(
-//     width: double.infinity,
-//     child: Stack(
-//       children: [
-//         Align(
-//           alignment: Alignment.centerLeft,
-//           child: Visibility(
-//             child: IconButton(
-//                 onPressed: (() {
-//                   navigateTo(context, Page);
-//                 }),
-//                 icon: Icon(Icons.arrow_back_ios_new)),
-//           ),
-//         ),
-//         Align(
-//             alignment: Alignment.center,
-//             child: Text(
-//               Title,
-//               style: TextStyle(
-//                   color: mainColor, fontSize: 30, fontWeight: FontWeight.bold),
-//             ))
-//       ],
-//     ),
-//   );
-// }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -536,17 +447,6 @@ Widget Title_m({
     width: double.infinity,
     child: Stack(
       children: [
-        /*Align(
-          alignment: Alignment.centerLeft,
-          child: Visibility(
-            visible: arrow_visible,
-            child: IconButton(
-                onPressed: (() {
-                  PopTo(context, Page);
-                }),
-                icon: Icon(Icons.arrow_back_ios_new)),
-          ),
-        ),*/
         Align(
             //alignment: Alignment.bottomCenter,
             child: Text(
@@ -685,7 +585,6 @@ Widget textField1({
         ],
       ));
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class MyButton extends StatefulWidget {
   late String Title;
@@ -738,55 +637,6 @@ class _MyButtonState extends State<MyButton> {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// class ProfilePic extends StatefulWidget {
-//   const ProfilePic({super.key});
-
-//   @override
-//   State<ProfilePic> createState() => _ProfilePicState();
-// }
-
-// class _ProfilePicState extends State<ProfilePic> {
-//   late File _image;
-//   void initState() {
-//     setState(() {
-//       _image = imagePermanent != null ? imagePermanent : File("asset/Images/noProfile.png");
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       margin: const EdgeInsets.all(20),
-//       width: double.infinity,
-//       //height: 150,
-//       child: Stack(
-//         children: [
-//           Center(
-//             child: ClipOval(
-//               child: SizedBox.fromSize(
-//                 size: Size.fromRadius(50), // Image radius
-//                 child: _image != null
-//                     ? Image.file(
-//                         _image,
-//                         fit: BoxFit.cover,
-//                       )
-//                     : Image.asset("asset/Images/noProfile.png",
-//                         fit: BoxFit.fill,
-//                         width: 10,
-//                         height: 10,
-//                       ),
-//               ),
-//             ),
-//           ),
-//           const Center(
-//             child: rotation(),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class ProfilePic extends StatefulWidget {
   const ProfilePic({super.key});
 
@@ -797,9 +647,7 @@ class ProfilePic extends StatefulWidget {
 class _ProfilePicState extends State<ProfilePic> {
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      // _image = imagePermanent != null ? imagePermanent : image_d;
-    });
+    setState(() {});
     return Container(
       margin: const EdgeInsets.all(20),
       width: double.infinity,
@@ -854,7 +702,8 @@ Widget profileButton1({
       ),
       InkWell(
         onTap: (() {
-          navigateTo(context, page);
+          Navigator.pushReplacement(context,
+              (MaterialPageRoute(builder: (context) => editProfile())));
         }),
         child: Container(
           height: 30,

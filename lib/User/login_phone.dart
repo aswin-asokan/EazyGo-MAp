@@ -19,39 +19,29 @@ class login_phone extends StatefulWidget {
 }
 
 class _login_phoneState extends State<login_phone> {
+  TextEditingController phoneNum = TextEditingController();
   @override
   void initState() {
     super.initState();
-    checkLoggedIn();
   }
 
-  bool _isLoggedIn = false;
+  void dispose() {
+    phoneNum.dispose();
+    super.dispose();
+  }
+
 // Create an instance of the FirebaseAuth class
   FirebaseAuth _auth = FirebaseAuth.instance;
-  Future<void> checkLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    phVal = prefs.getString('phoneNumber');
-    ver = prefs.getString('verificationId');
-
-    if (phVal != null && ver != null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: ((context) => const Map())));
-      setState(() {});
-    }
-  }
 
   void generateOTP(String phoneNumber) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('phoneNumber', phoneNumber);
-    // Call verifyPhoneNumber() to start the OTP verification process
     await _auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: (phoneAuthCredential) {
-        // Called when the verification is complete automatically (e.g. when testing on iOS)
         _auth.signInWithCredential(phoneAuthCredential);
       },
       verificationFailed: (error) {
-        // Called when the verification fails (e.g. if the phone number is invalid)
         print(error.toString());
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Error Try Again Later'),
@@ -60,11 +50,8 @@ class _login_phoneState extends State<login_phone> {
         ));
       },
       codeSent: (verificationId, resendToken) {
-        // Called when the OTP code is sent to the user's phone number
-        // Store the verification ID and the resend token in a local variable
         String smsCode = '';
 
-        // Display a dialog box to the user to enter the OTP code
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -104,7 +91,6 @@ class _login_phoneState extends State<login_phone> {
                         color: Color(0xff1c6758)),
                   ),
                   onPressed: () async {
-                    // Call signInWithCredential() to sign in with the OTP code
                     AuthCredential credential = PhoneAuthProvider.credential(
                         verificationId: verificationId, smsCode: smsCode);
                     await _auth.signInWithCredential(credential);
@@ -128,7 +114,6 @@ class _login_phoneState extends State<login_phone> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController phoneNum = TextEditingController();
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;

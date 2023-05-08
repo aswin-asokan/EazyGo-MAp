@@ -4,6 +4,7 @@ import 'package:eazygo_map/auth_prov.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'Profile/SourceScreen/Variables.dart';
@@ -11,6 +12,10 @@ import 'Profile/SourceScreen/Variables.dart';
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(MyApp());
 }
 
@@ -27,7 +32,8 @@ class MyApp extends StatelessWidget {
             create: (context) => context.watch<AuthProvider>().stream(),
             initialData: null),
         ChangeNotifierProvider(
-            create: (context) => ReportProvider(),)
+          create: (context) => ReportProvider(),
+        )
       ],
       child: MaterialApp(
           home: AnimatedSplashScreen(

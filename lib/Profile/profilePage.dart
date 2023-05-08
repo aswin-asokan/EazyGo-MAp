@@ -1,14 +1,10 @@
+import 'package:eazygo_map/Profile/help.dart';
 import 'package:eazygo_map/variables.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:eazygo_map/variables.dart';
 import 'ContactUs.dart';
-import 'Edit_profile.dart';
-import 'FeedsPage.dart';
+import 'editProfile.dart';
 import 'Settings.dart';
-import 'SourceScreen/Variables.dart';
 import 'SourceScreen/widgets.dart';
-import 'Your_report.dart';
 
 class profilePage extends StatefulWidget {
   const profilePage({super.key});
@@ -44,7 +40,7 @@ class _profilePageState extends State<profilePage> {
               height: 15,
             ),
             profileButton1(
-                title: "Your Profile",
+                title: "Edit Profile",
                 icon: Icons.edit,
                 context: context,
                 page: editProfile()),
@@ -59,22 +55,16 @@ class _profilePageState extends State<profilePage> {
             SizedBox(
               height: 20,
             ),
-            /*card(
-                title: "Reports made by you",
-                svgPath: "images/svg/reportIcon.svg",
-                context: context,
-                page: YourReport()),
-            card(
-                title: "Feeds Posted",
-                svgPath: "images/svg/FeedsIcon.svg",
-                context: context,
-                page: const feedsPage()),*/
             card(
                 title: "Settings",
                 svgPath: "images/svg/SettingsIcon.svg",
                 context: context,
                 page: SettingaPage()),
-            card(title: "Help", svgPath: "images/svg/HelpIcon.svg"),
+            card(
+                title: "Help",
+                svgPath: "images/svg/HelpIcon.svg",
+                context: context,
+                page: help()),
             card(
                 title: "Contact Us",
                 svgPath: "images/svg/ContactIcon.svg",

@@ -13,6 +13,8 @@ class create_profile extends StatefulWidget {
 }
 
 class _create_profileState extends State<create_profile> {
+  TextEditingController fullname = TextEditingController();
+  TextEditingController location = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
@@ -21,8 +23,6 @@ class _create_profileState extends State<create_profile> {
     final CollectionReference _users =
         FirebaseFirestore.instance.collection('USERS');
 
-    TextEditingController fullname = TextEditingController();
-    TextEditingController location = TextEditingController();
     bool loding = false;
     final font, size1, size2, rad, l, t;
     var userId, docId;
@@ -146,7 +146,9 @@ class _create_profileState extends State<create_profile> {
                                     );
                                   });
                             },
-                            icon: Icon(Icons.add_a_photo_rounded),
+                            icon: Icon(
+                              Icons.add_a_photo_rounded,
+                            ),
                           ))
                     ],
                   ),
@@ -282,22 +284,30 @@ class _create_profileState extends State<create_profile> {
                                   onPressed: () async {
                                     final String name = fullname.text;
                                     final String loc = location.text;
-
-                                    final user =
-                                        FirebaseAuth.instance.currentUser;
-                                    if (name != null && loc != null) {
-                                      await _users.add({
-                                        'provider': provider,
-                                        "Name": name,
-                                        "Location": loc,
-                                        "image": img
-                                      });
+                                    if (name.isEmpty || loc.isEmpty) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text('Enter all fields'),
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Color(0xff1c6758),
+                                      ));
+                                    } else {
+                                      final user =
+                                          FirebaseAuth.instance.currentUser;
+                                      if (name != null && loc != null) {
+                                        await _users.add({
+                                          'provider': provider,
+                                          "Name": name,
+                                          "Location": loc,
+                                          "image": img
+                                        });
+                                      }
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  const login_email())));
                                     }
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: ((context) =>
-                                                const login_email())));
                                   },
                                   style: ButtonStyle(
                                       shape: MaterialStateProperty.all(

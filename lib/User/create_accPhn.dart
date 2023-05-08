@@ -185,7 +185,7 @@ class _create_accState extends State<create_accPhn> {
                       width: width * 0.4,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pop(
+                          Navigator.push(
                               context,
                               (MaterialPageRoute(
                                   builder: (context) => create_acc())));

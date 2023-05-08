@@ -155,41 +155,12 @@ class _passwordState extends State<password> {
                         fontWeight: FontWeight.w600),
                   ),
                 ),
-
-                /*style: ButtonStyle(
-                                shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10))),
-                                backgroundColor: const MaterialStatePropertyAll(
-                                    Color(0xff1c6758)),),
-                            child: Text(
-                              'Next',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.urbanist(
-                                  color: Colors.white,
-                                  fontSize: height * 0.02,
-                                  fontWeight: FontWeight.w600),
-                            )
-                            */
               ),
             ],
           ),
         ),
       ),
     );
-    /* Future resetpassword() async{
-    try{ await FirebaseAuth.instance.sendPasswordResetEmail(email: econtroller.text.trim());
-     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Recovery Email Successfully Sent'),
-                        duration: Duration(seconds: 2),),) ;
-    
-    }
-    catch(e){
-
-    }}
-      Navigator.of(context).pop();
-    */
-
     return const Placeholder();
   }
 }

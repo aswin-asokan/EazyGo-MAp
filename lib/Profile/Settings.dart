@@ -79,10 +79,6 @@ class _SettingaPageState extends State<SettingaPage> {
             SizedBox(
               height: 10,
             ),
-            card(
-                title: "Privacy Policy",
-                svgPath: "images/svg/PrivacyIcon.svg",
-                line_visible: false)
           ],
         ),
       )),

@@ -7,3 +7,4 @@ String? location;
 String? prov;
 String? ph;
 String? phVal, ver;
+String? n, l;
