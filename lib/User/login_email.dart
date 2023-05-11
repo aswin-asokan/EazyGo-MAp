@@ -99,37 +99,55 @@ class _login_emailState extends State<login_email> {
     setState(() {
       _isLoggedIn = true;
     });
-    FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password)
-        .then((value) async {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: ((context) => const Map())));
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('USERS')
-          .where('provider', isEqualTo: provider)
-          .get();
-      if (querySnapshot.docs.isNotEmpty) {
-        for (var doc in querySnapshot.docs) {
-          location = doc['Location'];
-          print('loc:' + location!);
-          userName = doc['Name'];
-          img = doc['image'];
-          provider = doc['provider'];
-          await prefs.setString('location', location!);
-          await prefs.setString('userName', userName!);
-          await prefs.setString('img', img);
-          await prefs.setString('provider', provider!);
-        }
-      } else {
-        print('No document found with email: $provider');
+    String? e;
+    QuerySnapshot s = await FirebaseFirestore.instance
+        .collection('USERS')
+        .where('provider', isEqualTo: provider)
+        .get();
+    if (s.docs.isNotEmpty) {
+      for (var doc in s.docs) {
+        e = doc['provider'];
       }
-    }).onError((error, stackTrace) {
+    }
+    if (e == provider) {
+      FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) async {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: ((context) => const Map())));
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('USERS')
+            .where('provider', isEqualTo: provider)
+            .get();
+        if (querySnapshot.docs.isNotEmpty) {
+          for (var doc in querySnapshot.docs) {
+            location = doc['Location'];
+            print('loc:' + location!);
+            userName = doc['Name'];
+            img = doc['image'];
+            provider = doc['provider'];
+            await prefs.setString('location', location!);
+            await prefs.setString('userName', userName!);
+            await prefs.setString('img', img);
+            await prefs.setString('provider', provider!);
+          }
+        } else {
+          print('No document found with email: $provider');
+        }
+      }).onError((error, stackTrace) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Email or Password Incorrect'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Color(0xff1c6758),
+        ));
+      });
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Email or Password Error'),
+        content: Text('Register to login'),
         duration: Duration(seconds: 2),
         backgroundColor: Color(0xff1c6758),
       ));
-    });
+    }
   }
 
   Widget build(BuildContext context) {
