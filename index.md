@@ -3,7 +3,7 @@
 ## eazyGo Help:
 First of you need to give access to your current location manually through app info in you smart phone<br>
 ### 1. Long press on app icon in menu and tap on app info:
-<img src="https://github.com/aswin-asokan/EazyGo-MAp/blob/master/screenshot/long.jpg" alt="long press" height="25%" width="25%"/><br>
+<img src="https://github.com/aswin-asokan/EazyGo-MAp/master/screenshot/long.jpg" alt="long press" height="25%" width="25%"/><br>
 ### 2. Click on permissions:
 <img src="https://github.com/aswin-asokan/EazyGo-MAp/blob/master/screenshot/info.jpg" alt="app info" height="25%" width="25%"/><br>
 ### 3. Allow location permission for the app:
