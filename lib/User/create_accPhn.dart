@@ -185,7 +185,7 @@ class _create_accState extends State<create_accPhn> {
                       width: width * 0.4,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.pop(
                               context,
                               (MaterialPageRoute(
                                   builder: (context) => create_acc())));
@@ -310,7 +310,16 @@ class _create_accState extends State<create_accPhn> {
                       child: ElevatedButton(
                           onPressed: () {
                             provider = phn.text;
-                            generateOTP('+91' + phn.text);
+                            if (phn.text.isEmpty) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text('Enter phone number'),
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Color(0xff1c6758),
+                              ));
+                            } else {
+                              generateOTP('+91' + phn.text);
+                            }
                           },
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all(

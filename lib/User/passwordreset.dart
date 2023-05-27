@@ -11,7 +11,14 @@ class password extends StatefulWidget {
 }
 
 class _passwordState extends State<password> {
+  final econtroller = TextEditingController();
+
   @override
+  void dispose() {
+    econtroller.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final height = MediaQuery.of(context).size.height;
@@ -29,11 +36,6 @@ class _passwordState extends State<password> {
     } else {
       size1 = height * 0.02;
       size2 = height * 0.06;
-    }
-    final econtroller = TextEditingController();
-    void dispose() {
-      econtroller.dispose();
-      super.dispose();
     }
 
     return SafeArea(

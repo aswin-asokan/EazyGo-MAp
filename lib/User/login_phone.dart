@@ -297,6 +297,13 @@ class _login_phoneState extends State<login_phone> {
                     child: ElevatedButton(
                         onPressed: () async {
                           ph = phoneNum.text;
+                          if (ph!.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Enter phone number'),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Color(0xff1c6758),
+                            ));
+                          }
                           QuerySnapshot querySnapshot = await FirebaseFirestore
                               .instance
                               .collection('USERS')
@@ -358,8 +365,7 @@ class _login_phoneState extends State<login_phone> {
                             Navigator.push(
                                 context,
                                 (MaterialPageRoute(
-                                    builder: (context) =>
-                                        const create_accPhn())));
+                                    builder: (context) => const create_acc())));
                           },
                           child: Text(
                             'Create an account',

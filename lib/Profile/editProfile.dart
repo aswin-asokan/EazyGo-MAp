@@ -65,7 +65,6 @@ class _editProfileState extends State<editProfile> {
                   svgPath: "images/svg/emailicon.svg",
                   hintText: "Email ID",
                   controller: p),
-
               SizedBox(
                 height: 60,
               ),

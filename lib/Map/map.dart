@@ -42,18 +42,20 @@ class _MapState extends State<Map> {
   Color color1 = Color.fromRGBO(217, 233, 230, 1);
   Color color2 = Color(0xff1c6758);
 
-  void _getUsersFromFirestore() {
-    FirebaseFirestore.instance
+  void _getUsersFromFirestore() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('USERS')
-        .snapshots()
-        .listen((querySnapshot) {
+        .where('provider', isEqualTo: provider)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
       for (var doc in querySnapshot.docs) {
         location = doc['Location'];
+        print('loc:' + location!);
         userName = doc['Name'];
         img = doc['image'];
         provider = doc['provider'];
       }
-    });
+    }
   }
 
   /*current

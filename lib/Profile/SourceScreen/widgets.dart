@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eazygo_map/Profile/editProfile.dart';
 import 'package:eazygo_map/User/login_page.dart';
 import 'package:eazygo_map/variables.dart';
@@ -701,7 +702,20 @@ Widget profileButton1({
         height: 2,
       ),
       InkWell(
-        onTap: (() {
+        onTap: (() async {
+          QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+              .collection('USERS')
+              .where('provider', isEqualTo: provider)
+              .get();
+          if (querySnapshot.docs.isNotEmpty) {
+            for (var doc in querySnapshot.docs) {
+              location = doc['Location'];
+              userName = doc['Name'];
+              img = doc['image'];
+              provider = doc['provider'];
+            }
+          }
+
           Navigator.pushReplacement(context,
               (MaterialPageRoute(builder: (context) => editProfile())));
         }),
