@@ -1,3 +1,4 @@
+import 'package:eazygo_map/variables.dart';
 import 'package:flutter/material.dart';
 import 'SourceScreen/widgets.dart';
 import 'SourceScreen/Variables.dart';
@@ -15,6 +16,7 @@ class contactPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: c1,
       body: SafeArea(
           child: Container(
         padding: EdgeInsets.only(top: 30, left: 15, right: 15),
@@ -35,14 +37,12 @@ class contactPage extends StatelessWidget {
                 Text(
                   "Contact",
                   style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                      color: mainColor),
+                      fontSize: 30, fontWeight: FontWeight.w500, color: c2),
                 ),
                 //SizedBox(height: 1,),
                 Text(
                   "We are here to help! send us your query via the phone number below or send us through email for any issue you are facing",
-                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                  style: TextStyle(fontSize: 13, color: c3),
                 ),
                 SizedBox(
                   height: 20,
@@ -51,7 +51,7 @@ class contactPage extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.phone,
-                      color: mainColor,
+                      color: c2,
                       size: 20,
                     ),
                     TextButton(
@@ -59,15 +59,14 @@ class contactPage extends StatelessWidget {
                           launchUrl(phoneNo);
                         },
                         child: Text("+91 6238303567",
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.grey))),
+                            style: TextStyle(fontSize: 15, color: c3))),
                   ],
                 ),
                 Row(
                   children: [
                     Icon(
                       Icons.mail,
-                      color: mainColor,
+                      color: c2,
                       size: 20,
                     ),
                     TextButton(
@@ -75,7 +74,7 @@ class contactPage extends StatelessWidget {
                           launchUrl(mail);
                         },
                         child: Text("aswin_asokan@outlook.com",
-                            style: TextStyle(fontSize: 15, color: Colors.grey)))
+                            style: TextStyle(fontSize: 15, color: c3)))
                   ],
                 )
               ],

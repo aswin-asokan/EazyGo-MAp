@@ -17,6 +17,7 @@ class _profilePageState extends State<profilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: c1,
       body: SafeArea(
           child: Container(
         padding: EdgeInsets.only(

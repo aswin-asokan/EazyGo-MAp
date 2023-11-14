@@ -11,6 +11,7 @@
 // import 'Theme.dart';
 
 import 'package:eazygo_map/Profile/profilePage.dart';
+import 'package:eazygo_map/variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +32,7 @@ class _SettingaPageState extends State<SettingaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: c1,
       body: SafeArea(
           child: Container(
         padding: EdgeInsets.only(top: 30, left: 20, right: 20),

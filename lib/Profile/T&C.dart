@@ -1,5 +1,6 @@
 // ignore_for_file: unused_import, camel_case_types, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:eazygo_map/variables.dart';
 import 'package:flutter/material.dart';
 
 class termsAndConditions extends StatelessWidget {
@@ -33,7 +34,7 @@ class termsAndConditions extends StatelessWidget {
             margin:
                 const EdgeInsets.only(top: 80, left: 15, right: 15, bottom: 35),
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: c1,
                 borderRadius: BorderRadius.circular(7),
                 // ignore: prefer_const_constructors
                 boxShadow: const [

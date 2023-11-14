@@ -317,9 +317,8 @@ class _card_CheckboxState extends State<card_Checkbox> {
               children: [
                 Expanded(
                     flex: 1,
-                    child: SvgPicture.asset(_svgPath,
-                        color:
-                            _isActive ? Color(0xff1C6758) : Color(0xff686868))),
+                    child:
+                        SvgPicture.asset(_svgPath, color: _isActive ? c2 : c3)),
                 SizedBox(
                   width: 5,
                 ),
@@ -330,18 +329,12 @@ class _card_CheckboxState extends State<card_Checkbox> {
                         Text(
                           _title,
                           style: TextStyle(
-                              fontSize: 16,
-                              color: _isActive
-                                  ? Color(0xff1C6758)
-                                  : Color(0xff686868)),
+                              fontSize: 16, color: _isActive ? c2 : c3),
                         ),
                         Text(
                           _notice!,
                           style: TextStyle(
-                              fontSize: 10,
-                              color: _isActive
-                                  ? Color(0xff1C6758)
-                                  : Color(0xff686868)),
+                              fontSize: 10, color: _isActive ? c2 : c3),
                         ),
                       ],
                     )),
@@ -402,7 +395,7 @@ Widget card(
               Expanded(
                   child: SvgPicture.asset(
                 svgPath,
-                color: Color(0xff1C6758),
+                color: c2,
               )),
               SizedBox(
                 width: 16,
@@ -411,9 +404,12 @@ Widget card(
                   flex: 10,
                   child: Text(
                     title,
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 18, color: c2),
                   )),
-              Icon(Icons.arrow_forward_ios_rounded),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: c3,
+              ),
             ],
           ),
           SizedBox(
@@ -452,10 +448,8 @@ Widget Title_m({
             //alignment: Alignment.bottomCenter,
             child: Text(
           Title,
-          style: TextStyle(
-              color: Color(0xff1C6758),
-              fontSize: 30,
-              fontWeight: FontWeight.w500),
+          style:
+              TextStyle(color: c2, fontSize: 30, fontWeight: FontWeight.w500),
         ))
       ],
     ),
@@ -685,8 +679,7 @@ Widget UserName({
       child: Center(
           child: Text(
         usernmae,
-        style: TextStyle(
-            fontSize: 25, fontWeight: FontWeight.w400, color: mainColor),
+        style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400, color: c2),
       )));
 }
 

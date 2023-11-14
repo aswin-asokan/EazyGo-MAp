@@ -7,9 +7,7 @@
 // import '../SourceScreen/widgets.dart';
 // import 'Settings.dart';
 
-
-
-
+import 'package:eazygo_map/variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +25,7 @@ class _LanguagePageState extends State<LanguagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: c1,
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.only(
@@ -44,7 +43,9 @@ class _LanguagePageState extends State<LanguagePage> {
               height: 230,
               width: 230,
             ),
-            SizedBox(height: 30,),
+            SizedBox(
+              height: 30,
+            ),
             card_Checkbox(
               line_visible: true,
               title: "English",

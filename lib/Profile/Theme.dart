@@ -5,12 +5,11 @@
 // import '../SourceScreen/widgets.dart';
 // import 'Settings.dart';
 
-
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/xml_templates.dart';
 
+import '../variables.dart';
 import 'Settings.dart';
 import 'SourceScreen/widgets.dart';
 
@@ -25,6 +24,7 @@ class _TheamPageState extends State<TheamPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: c1,
       body: SafeArea(
           child: Container(
         padding: EdgeInsets.only(
@@ -59,7 +59,25 @@ class _TheamPageState extends State<TheamPage> {
               svgPath: "images/svg/Dark_icon.svg",
               isActive: false,
               notice: "(darkmode is unavailable)",
-            )
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    c1 = Colors.black;
+                    c2 = Color.fromRGBO(217, 233, 230, 1);
+                    c3 = Colors.white;
+                  });
+                },
+                child: Text('dark mode')),
+            ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    c1 = Colors.white;
+                    c2 = Color(0xff1c6758);
+                    c3 = Color(0xff686868);
+                  });
+                },
+                child: Text('light mode'))
           ],
         ),
       )),

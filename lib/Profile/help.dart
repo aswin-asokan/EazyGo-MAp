@@ -1,4 +1,5 @@
 import 'package:eazygo_map/Profile/profilePage.dart';
+import 'package:eazygo_map/variables.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -31,7 +32,7 @@ class _helpState extends State<help> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: c1,
       body: SafeArea(
           child: Container(
         padding: EdgeInsets.only(top: 30, left: 15, right: 15),
@@ -39,7 +40,7 @@ class _helpState extends State<help> with SingleTickerProviderStateMixin {
           children: [
             Title_m(Title: "Need Help", context: context, Page: profilePage()),
             Image.asset(
-              "images/5236.jpg",
+              "images/help.png",
               height: 250,
             ),
             Column(
@@ -50,7 +51,7 @@ class _helpState extends State<help> with SingleTickerProviderStateMixin {
                 ),
                 Text(
                   "If you are having any type of trouble while using the app visit our site to learn more about it.",
-                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                  style: TextStyle(fontSize: 13, color: c3),
                 ),
                 SizedBox(
                   height: 20,
@@ -59,7 +60,7 @@ class _helpState extends State<help> with SingleTickerProviderStateMixin {
                   children: [
                     Icon(
                       Icons.link,
-                      color: mainColor,
+                      color: c2,
                       size: 20,
                     ),
                     TextButton(
@@ -69,8 +70,7 @@ class _helpState extends State<help> with SingleTickerProviderStateMixin {
                           launchUrlString(url);
                         },
                         child: Text("Click here to visit our site",
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.grey))),
+                            style: TextStyle(fontSize: 15, color: c3))),
                   ],
                 )
               ],

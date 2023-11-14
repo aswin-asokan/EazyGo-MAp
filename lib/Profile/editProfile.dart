@@ -27,6 +27,7 @@ class _editProfileState extends State<editProfile> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: c1,
       body: SafeArea(
           child: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
