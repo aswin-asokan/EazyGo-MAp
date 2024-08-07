@@ -2,6 +2,7 @@
 
 A mobile application that provides users with an easy way to report and manage pipeline issues, road patches, and other infrastructure needs.
 
+Also checkout our authority side site at [EazyGo_Authority](https://github.com/aswin-asokan/eazyGo_Auth)
 ### Download
 
 - **Recommended:** Download and install APK from **[GitHub Releases](https://github.com/aswin-asokan/EazyGo-MAp/releases/tag/v1.0.0)**
