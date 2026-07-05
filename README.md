@@ -1,5 +1,8 @@
 # eazyGo
 
+> [!WARNING]
+> Support for this application has been discontinued. The Firebase services and Google Cloud Platform (GCP) APIs used by the application have been deprecated and are no longer operational.
+
 A mobile application that provides users with an easy way to report and manage pipeline issues, road patches, and other infrastructure needs.
 
 Also checkout our authority side site at [EazyGo_Authority](https://github.com/aswin-asokan/eazyGo_Auth)
